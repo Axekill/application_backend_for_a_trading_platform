@@ -9,13 +9,15 @@ import javax.persistence.Entity;
 @Setter
 @ToString
 @Entity
-public class Ad {
-    private long authorId;
-    private String image;
+public class ExtendedAd {
     private long pkId;
+    private String authorFirstName;
+    private String authorLastName;
+    private String description;
+    private String email;
+    private String image;
+    private String phone;
     private int price;
     private String title;
-
-
 
 }
