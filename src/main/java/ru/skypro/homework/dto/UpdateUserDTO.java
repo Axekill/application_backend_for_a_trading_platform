@@ -1,14 +1,9 @@
-package ru.skypro.homework.model;
+package ru.skypro.homework.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Entity;
 @Data
-@Entity
-public class UpdateUser {
+public class UpdateUserDTO {
     private String firstName;
     /* minLength: 3
        maxLength: 10*/

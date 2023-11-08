@@ -1,15 +1,11 @@
-package ru.skypro.homework.model;
+package ru.skypro.homework.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Entity;
 import java.time.LocalDateTime;
+
 @Data
-@Entity
-public class Comment {
+public class CommentDTO {
     private Long authorId;
     private String authorImage;
     private String authorFirstName;

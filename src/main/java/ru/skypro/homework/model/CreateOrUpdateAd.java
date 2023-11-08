@@ -1,13 +1,12 @@
 package ru.skypro.homework.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 public class CreateOrUpdateAd {
     private String title;

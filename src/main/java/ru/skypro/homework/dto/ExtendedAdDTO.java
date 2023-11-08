@@ -1,14 +1,9 @@
-package ru.skypro.homework.model;
+package ru.skypro.homework.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Entity;
 @Data
-@Entity
-public class ExtendedAd {
+public class ExtendedAdDTO {
     private long pkId;
     private String authorFirstName;
     private String authorLastName;
@@ -18,5 +13,4 @@ public class ExtendedAd {
     private String phone;
     private int price;
     private String title;
-
 }

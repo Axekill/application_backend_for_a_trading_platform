@@ -11,12 +11,13 @@ import ru.skypro.homework.service.UserService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UsersController {
     private UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestParam ToStringStyler currentPassword,
-                                         @RequestParam ToStringStyler newPassword) {
+    public ResponseEntity<?> setPassword(@RequestParam String currentPassword,
+                                         @RequestParam String newPassword) {
         return null;
     }
 
