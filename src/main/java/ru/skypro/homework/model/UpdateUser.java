@@ -4,17 +4,21 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.Pattern;
+
 @Data
 @Entity
 public class UpdateUser {
-    private String firstName;
-    /* minLength: 3
-       maxLength: 10*/
-    private String lastName;
-    /* minLength: 3
-       maxLength: 10*/
 
-    private String phone;  //pattern: \+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}
+    @Length(min = 3, max = 10)
+    private String firstName;
+
+    @Length(min = 3, max = 10)
+    private String lastName;
+
+    @Pattern(regexp = "\\+7\s?\\(?\\d{3}\\)?\s?\\d{3}-?\\d{2}-?\\d{2}")
+    private String phone;
 }
