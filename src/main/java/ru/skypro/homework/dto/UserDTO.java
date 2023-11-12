@@ -1,28 +1,35 @@
 package ru.skypro.homework.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import ru.skypro.homework.model.Role;
+
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Data
+@Schema(description = "User")
 public class UserDTO {
-    @EqualsAndHashCode.Include
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Schema(description = "id ")
+    private int id;
+
+    @Schema(description = "логин ")
     private String email;
+
+    @Schema(description = "имя ")
     private String firstName;
+
+    @Schema(description = "фамилия ")
     private String lastName;
+
+    @Schema(description = "номер телефона ")
     private String phone;
+
+    @Schema(description = "роль ")
     private Role role;
+
+    @Schema(description = "фото пользователя")
     private String image;
 }

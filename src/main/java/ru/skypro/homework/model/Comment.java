@@ -5,15 +5,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 @Data
 @Entity
+@Table(name = "Comments")
 public class Comment {
-    private Long authorId;
-    private String authorImage;
-    private String authorFirstName;
-    private LocalDateTime createdAt;
-    private Long pkId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private long createdAt;
+
+    @Id
+    @GeneratedValue
+    private long pkId;
+
     private String textComment;
 }

@@ -1,5 +1,7 @@
 package ru.skypro.homework.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.extensions.spring.SpringMapperConfig;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.AdsDTO;
