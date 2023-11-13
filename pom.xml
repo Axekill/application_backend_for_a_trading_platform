@@ -116,8 +116,8 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <source>1.8</source> <!-- depending on your project -->
-                    <target>1.8</target> <!-- depending on your project -->
+                    <source>15</source> <!-- depending on your project -->
+                    <target>15</target> <!-- depending on your project -->
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct.extensions.spring</groupId>

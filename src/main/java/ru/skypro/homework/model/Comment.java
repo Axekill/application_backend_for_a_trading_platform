@@ -4,16 +4,22 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 @Data
 @Entity
 public class Comment {
-    private Long authorId;
-    private String authorImage;
-    private String authorFirstName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @CreationTimestamp
     private LocalDateTime createdAt;
-    private Long pkId;
     private String textComment;
+
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User user;
 }

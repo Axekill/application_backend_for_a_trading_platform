@@ -2,10 +2,9 @@ package ru.skypro.homework.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -19,10 +18,18 @@ public class User {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private String email;
     private String firstName;
     private String lastName;
+    private String email;
     private String phone;
-    private Role role;
     private String image;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "author")
+    private List<Ad> adList;
+
+    @OneToMany(mappedBy = "author")
+    private  List<Comment> commentList;
 }
