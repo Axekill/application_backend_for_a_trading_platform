@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
 
 @Slf4j
@@ -15,7 +16,8 @@ public class AdsController {
     private AdsService adsService;
 
     @PostMapping
-    public ResponseEntity<?> add(Ads ads) {
+
+    public ResponseEntity<?> add(Ad ad) {
         return null;
     }
 

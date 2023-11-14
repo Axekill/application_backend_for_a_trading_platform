@@ -1,12 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.ExtendedAdDTO;
+import ru.skypro.homework.model.Ad;
 
-@SpringMapperConfig
+@Mapper
 public interface ExtendedAdMapper {
 
-    ExtendedAdDTO toDTO(ExtendedAd extendedAd);
+    ExtendedAdDTO toDTO(Ad ad);
 
-    ExtendedAd toEntity(ExtendedAdDTO extendedAdDTO);
+    Ad toEntity(ExtendedAdDTO extendedAdDTO);
 }

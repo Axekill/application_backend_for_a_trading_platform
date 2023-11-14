@@ -1,11 +1,12 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.CommentsDTO;
+import ru.skypro.homework.model.Comment;
 
-@SpringMapperConfig
+@Mapper
 public interface CommentsMapper {
-    CommentsDTO toDTO(Comments comments);
+    CommentsDTO toDTO(Comment comment);
 
-    Comments toEntity(CommentsDTO commentsDTO);
+    Comment toEntity(CommentsDTO commentsDTO);
 }

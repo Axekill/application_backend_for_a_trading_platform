@@ -1,12 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
+import ru.skypro.homework.model.Comment;
 
-@SpringMapperConfig
+@Mapper
 public interface CreateOrUpdateCommentMapper {
 
-    CreateOrUpdateCommentDTO toDTO(CreateOrUpdateComment createOrUpdateComment);
+    CreateOrUpdateCommentDTO toDTO(Comment comment);
 
-    CreateOrUpdateComment toEntity(CreateOrUpdateCommentDTO createOrUpdateCommentDTO);
+   Comment toEntity(CreateOrUpdateCommentDTO createOrUpdateCommentDTO);
 }
