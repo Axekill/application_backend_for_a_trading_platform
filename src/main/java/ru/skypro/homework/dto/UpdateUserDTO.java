@@ -16,7 +16,6 @@ public class UpdateUserDTO {
     private String firstName;
 
     @Schema(description = "фамилия ")
-    @NotBlank
     @Size(min = 2, max = 20)
     private String lastName;
 

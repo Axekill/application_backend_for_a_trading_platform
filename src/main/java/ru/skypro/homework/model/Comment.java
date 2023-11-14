@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,4 +23,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "ad")
+    private Ad ad;
 }
