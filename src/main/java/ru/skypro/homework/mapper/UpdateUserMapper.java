@@ -1,10 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.UpdateUserDTO;
+import ru.skypro.homework.model.User;
 
-@SpringMapperConfig
+@Mapper
 public interface UpdateUserMapper {
 
+    UpdateUserDTO toDTO(User user);
 
+    User toEntity(UpdateUserDTO updateUserDTO);
 }

@@ -1,29 +1,12 @@
 package ru.skypro.homework.mapper;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.AdsDTO;
+import ru.skypro.homework.model.Ad;
 
-import javax.validation.constraints.NotBlank;
+@Mapper
+public interface AdsMapper {
 
-@SpringMapperConfig
-@Schema(description = "Объявление")
-public class AdsMapper {
-
-   @Schema(description = "id ad")
-   private long pkId;
-   @Schema(description = "id автора")
-   private long author;
-
-    @Schema(description = "фото в объявлении")
-    private String image;
-
-
-    @Schema(description = "цена")
-    private int price;
-
-    @Schema(description = "заголовок объявления")
-    private String title;
-
-
+    AdsDTO toDTO(Ad ad);
+    Ad toEntity(AdsDTO adsDTO);
 }

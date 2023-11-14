@@ -1,12 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
+import ru.skypro.homework.model.Ad;
 
-@SpringMapperConfig
+@Mapper
 public interface CreateOrUpdateAdMapper {
 
-    CreateOrUpdateAdDTO toDTO(CreateOrUpdateAd createOrUpdateAd);
+    CreateOrUpdateAdDTO toDTO(Ad ad);
 
-    CreateOrUpdateAd toEntity(CreateOrUpdateAdDTO createOrUpdateAdDTO);
+    Ad toEntity(CreateOrUpdateAdDTO createOrUpdateAdDTO);
 }

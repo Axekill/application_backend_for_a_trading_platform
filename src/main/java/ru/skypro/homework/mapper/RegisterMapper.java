@@ -1,13 +1,13 @@
 package ru.skypro.homework.mapper;
 
-import jdk.vm.ci.code.Register;
-import org.mapstruct.extensions.spring.SpringMapperConfig;
+import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.RegisterDTO;
+import ru.skypro.homework.model.User;
 
-@SpringMapperConfig
+@Mapper
 public interface RegisterMapper {
 
-    RegisterDTO toDto(Register register);
+    RegisterDTO toDto(User user);
 
-    Register toEntity(RegisterDTO registerDTO);
+    User toEntity(RegisterDTO registerDTO);
 }
