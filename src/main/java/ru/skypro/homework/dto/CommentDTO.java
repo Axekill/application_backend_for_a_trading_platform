@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Data
 @Schema(description = "Comments")
 public class CommentDTO {
+    @Schema(description = "id комментария")
+    private int id;
 
     @Schema(description = "id автора")
     private Long authorId;
@@ -20,9 +22,6 @@ public class CommentDTO {
 
     @Schema(description = "дата и время создания комментария")
     private long createdAt;
-
-    @Schema(description = "id комментария")
-    private int pkCommentId;
 
     @Schema(description = "текст")
     private String text;

@@ -12,7 +12,7 @@ public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     @Mapping(source = "comment.createComment", target = "createAt")
-    @Mapping(source = "comment.pkCommentId", target = "pkCommentId")
+    @Mapping(source = "comment.id", target = "id")
     @Mapping(source = "comment.text", target = "text")
     @Mapping(source = "user.authorId", target = "authorId")
     @Mapping(source = "user.authorImage", target = "authorImage")
