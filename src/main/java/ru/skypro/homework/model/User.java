@@ -20,6 +20,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
+    //логин
+    private String username;
+
 
     private String firstName;
     private String lastName;
@@ -36,5 +39,5 @@ public class User {
     private List<Ad> adList;
 
     @OneToMany(mappedBy = "author")
-    private  List<Comment> commentList;
+    private List<Comment> commentList;
 }

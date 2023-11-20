@@ -15,7 +15,7 @@ public class UserDTO {
     @Schema(description = "id ")
     private int id;
 
-    @Schema(description = "логин ")
+    @Schema(description = "почта ")
     private String email;
 
     @Schema(description = "имя ")

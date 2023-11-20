@@ -3,9 +3,6 @@ package ru.skypro.homework.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
 
     public User findUser(Authentication authentication){
-       return  repository.findByUserName(authentication.getName()).orElseThrow();
+        return  repository.findByUserName(authentication.getName()).orElseThrow();
     }
 
     @Override
@@ -47,9 +44,9 @@ public class UserServiceImpl implements UserService {
         if (encoder.matches(newPasswordDto.getCurrentPassword(), currentPassword)) {
             user.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
             repository.save(user);
-            NewPasswordMapper.INSTANCE.toDto(user);
+            NewPasswordMapper.INSTANCE.toDTO(user);
             return newPasswordDto;
-    }
+        }
         else{
             throw new Exception("ошибка изменения пароля");
         }

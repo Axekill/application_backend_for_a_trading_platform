@@ -12,10 +12,18 @@ public interface NewPasswordMapper {
 
     NewPasswordMapper INSTANCE = Mappers.getMapper(NewPasswordMapper.class);
 
-    @Mapping(source = "user.password", target = "currentPassword")
+    //из юзера берем пароль и передаем его в дто
+    @Mapping(source = "password", target = "dto.currentPassword")
+    User toEntity(NewPasswordDTO dto);
+
+    //новый пароль из дто передаем в юзер
+    @Mapping(source = "newPassword", target = "user.password")
+    NewPasswordDTO toDTO(User user);
+
+  /*  @Mapping(source = "user.password", target = "currentPassword")
   //  @Mapping(source = "user.newPassword", target = "newPassword")
     NewPasswordDTO toDto(User user);
 
     @Mapping(source = "user.password", target = "newPassword")
-    User toModel(RegisterDTO registerDto);
+    User toModel(RegisterDTO registerDto);*/
 }

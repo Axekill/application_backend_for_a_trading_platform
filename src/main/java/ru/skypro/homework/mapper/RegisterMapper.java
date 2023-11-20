@@ -9,7 +9,7 @@ import ru.skypro.homework.model.User;
 @Mapper
 public interface RegisterMapper {
      RegisterMapper INSTANCE = Mappers.getMapper(RegisterMapper.class);
-    @Mapping(source = "username", target = "user.userName")
+    @Mapping(source = "username", target = "user.username")
     @Mapping(source = "password", target = "user.password")
     @Mapping(source = "firstName", target = "user.firstName")
     @Mapping(source = "lastName", target = "user.lastName")

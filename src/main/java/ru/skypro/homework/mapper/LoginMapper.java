@@ -9,7 +9,7 @@ import ru.skypro.homework.model.User;
 @Mapper
 public interface LoginMapper {
  LoginMapper INSTANCE = Mappers.getMapper(LoginMapper.class);
-    @Mapping(source = "userName",target = "user.userName")
+    @Mapping(source = "username",target = "user.username")
     @Mapping(source = "password",target = "user.password" )
     User toModel(LoginDTO loginDto);
 }
