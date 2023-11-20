@@ -12,14 +12,14 @@ public class CreateOrUpdateAdDTO {
 
 
 
-    @Size(min = 6, max = 20)
+    @Size(min = 4, max = 32)
     private String  title;
 
     @Schema(description = "Цена")
-    @Size(max = 9999999)
+    @Size(min = 0 ,max = 10000000)
     private int price;
 
     @Schema(description = "Описание объявления")
-    @Size(min = 1, max = 100)
+    @Size(min = 8, max = 64)
     private String  description;
 }

@@ -9,13 +9,12 @@ import lombok.Data;
 @Schema(description = "Ad")
 public class AdDTO {
     @Schema(description = "id ad")
-    private long pkId;
+    private long id;
     @Schema(description = "id автора")
     private long author;
 
     @Schema(description = "фото в объявлении")
     private String image;
-
 
     @Schema(description = "цена")
     private int price;

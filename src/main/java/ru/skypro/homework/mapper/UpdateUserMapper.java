@@ -9,11 +9,13 @@ import ru.skypro.homework.model.User;
 @Mapper
 public interface UpdateUserMapper {
     UpdateUserMapper INSTANCE = Mappers.getMapper(UpdateUserMapper.class);
-    @Mapping(source = "firstName", target = "user.firstName")
-    @Mapping(source = "lastName", target = "user.lastName")
-    @Mapping(source = "phone", target = "user.phone")
-    User toModel(UpdateUserDTO updateUserDto, User user);
+    @Mapping(source = "dto.firstName", target = "firstName")
+    @Mapping(source = "dto.lastName", target = "lastName")
+    @Mapping(source = "dto.phone", target = "phone")
+    User toEntity(UpdateUserDTO dto);
 
-
-    UpdateUserDTO toDto(User user);
+    @Mapping(source = "user.firstName", target = "firstName")
+    @Mapping(source = "user.lastName", target = "lastName")
+    @Mapping(source = "user.phone", target = "phone")
+    UpdateUserDTO toDTO(User user);
 }

@@ -11,14 +11,25 @@ import ru.skypro.homework.model.User;
 public interface ExtendedAdMapper {
 
     ExtendedAdMapper INSTANCE = Mappers.getMapper(ExtendedAdMapper.class);
-    @Mapping(source = "ad.pkId", target = "pkId")
-    @Mapping(source = "user.authorFirstName", target = "authorFirstName")
-    @Mapping(source = "user.authorLastName", target = "authorLastName")
+
+    @Mapping(source = "ad.id", target = "id")
+    @Mapping(source = "user.firstName", target = "authorFirstName")
+    @Mapping(source = "user.lastName", target = "authorLastName")
     @Mapping(source = "ad.description", target = "description")
-    @Mapping(source = "user.authorEmail", target = "email")
+    @Mapping(source = "user.email", target = "email")
     @Mapping(source = "ad.image", target = "image")
-    @Mapping(source = "user.authorPhone", target = "phone")
+    @Mapping(source = "user.phone", target = "phone")
     @Mapping(source = "ad.price", target = "prise")
     @Mapping(source = "ad.title", target = "title")
     ExtendedAdDTO toDTO(Ad ad, User user);
+
+    @Mapping(target = "firstName", source = "dto.authorFirstName")
+    @Mapping(target = "lastName", source = "dto.authorLastName")
+    @Mapping(target = "email", source = "dto.email")
+    @Mapping(target = "phone", source = "dto.phone")
+    User toEntity(ExtendedAdDTO dto);
+
+    Ad adToEntity(ExtendedAdDTO dto);
+
+
 }

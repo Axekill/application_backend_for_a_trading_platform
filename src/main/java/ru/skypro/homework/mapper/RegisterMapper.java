@@ -8,14 +8,24 @@ import ru.skypro.homework.model.User;
 
 @Mapper
 public interface RegisterMapper {
-     RegisterMapper INSTANCE = Mappers.getMapper(RegisterMapper.class);
-    @Mapping(source = "username", target = "user.username")
-    @Mapping(source = "password", target = "user.password")
-    @Mapping(source = "firstName", target = "user.firstName")
-    @Mapping(source = "lastName", target = "user.lastName")
-    @Mapping(source = "phone", target = "user.phone")
-    @Mapping(source = "role", target = "user.role")
-    User toModel(RegisterDTO registerDto);
+    RegisterMapper INSTANCE = Mappers.getMapper(RegisterMapper.class);
+
+    @Mapping(source = "dto.username", target = "username")
+    @Mapping(source = "dto.password", target = "password")
+    @Mapping(source = "dto.firstName", target = "firstName")
+    @Mapping(source = "dto.lastName", target = "lastName")
+    @Mapping(source = "dto.phone", target = "phone")
+    @Mapping(source = "dto.role", target = "role")
+    User toEntity(RegisterDTO dto);
+
+
+    @Mapping(source = "user.username", target = "username")
+    @Mapping(source = "user.password", target = "password")
+    @Mapping(source = "user.firstName", target = "firstName")
+    @Mapping(source = "user.lastName", target = "lastName")
+    @Mapping(source = "user.phone", target = "phone")
+    @Mapping(source = "user.role", target = "role")
+    RegisterDTO toDTO(User user);
 }
 
 

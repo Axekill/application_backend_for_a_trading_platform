@@ -14,7 +14,7 @@ public class CommentDTO {
     @Schema(description = "id автора")
     private Long authorId;
 
-    @Schema(description = "аватар комментари")
+    @Schema(description = "аватар автора")
     private String authorImage;
 
     @Schema(description = "имя автора")

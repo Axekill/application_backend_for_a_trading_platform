@@ -13,6 +13,7 @@ public class LoginDTO {
     @Schema(description = "логин")
     @Size(min = 5, max =30)
     private String username;
+
     @Schema(description = "пароль")
     @Size(min = 5, max = 30)
     private String password;

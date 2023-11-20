@@ -11,22 +11,17 @@ import ru.skypro.homework.model.User;
 public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-    @Mapping(source = "comment.createComment", target = "createAt")
-    @Mapping(source = "comment.id", target = "id")
-    @Mapping(source = "comment.text", target = "text")
-    @Mapping(source = "user.authorId", target = "authorId")
-    @Mapping(source = "user.authorImage", target = "authorImage")
+
+    @Mapping(source = "user.id", target = "authorId")
+    @Mapping(source = "user.image", target = "authorImage")
     @Mapping(source = "user.firstName", target = "authorFirstName")
-    CommentDTO toDto(Comment comment, User user);
+    CommentDTO toDTO(Comment comment, User user);
 
 
-    @Mapping(source = "author", target = "authorId")
-    @Mapping(source = "authorImage", target = "user.authorImage")
-    @Mapping(source = "authorFirstName", target = "user.firstName")
-    Comment toEntity(CommentDTO commentDTO);
-
-
-
+    @Mapping(target = "id", source = "dto.authorId")
+    @Mapping(target = "image", source = "dto.authorImage")
+    @Mapping(target = "firstName", source = "dto.authorFirstName")
+    User toEntity(CommentDTO dto);
 
 
 }

@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication) {
         User user = findUser(authentication);
-        UpdateUserMapper.INSTANCE.toModel(updateUserDTO, user);
+        UpdateUserMapper.INSTANCE.toEntity(updateUserDTO);
         repository.save(user);
-        return UpdateUserMapper.INSTANCE.toDto(user);
+        return UpdateUserMapper.INSTANCE.toDTO(user);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserInfo(Authentication authentication) {
         User user = findUser(authentication);
-        return UserMapper.INSTANCE.toDto(user);
+        return UserMapper.INSTANCE.toDTO(user);
 
     }
 

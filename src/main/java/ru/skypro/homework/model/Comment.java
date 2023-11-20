@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 @Data
 @Entity
-@Table(name = "Comments")
+@Table(name = "Comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
