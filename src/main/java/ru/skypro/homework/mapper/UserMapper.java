@@ -13,5 +13,5 @@ public interface UserMapper {
 
     @Mapping(target = "user.adList", ignore = true)
     @Mapping(target = "user.commentList", ignore = true)
-    UserDTO toDto(Ad ad);
+    UserDTO toDto(User user);
 }

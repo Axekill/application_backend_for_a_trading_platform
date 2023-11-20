@@ -12,6 +12,8 @@ public interface UpdateUserMapper {
     @Mapping(source = "firstName", target = "user.firstName")
     @Mapping(source = "lastName", target = "user.lastName")
     @Mapping(source = "phone", target = "user.phone")
-    User toModel(UpdateUserDTO updateUserDto);
+    User toModel(UpdateUserDTO updateUserDto, User user);
 
+
+    UpdateUserDTO toDto(User user);
 }
