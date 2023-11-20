@@ -4,6 +4,7 @@ import lombok.*;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -25,6 +26,8 @@ public class User {
     private String email;
     private String phone;
     private String image;
+    @Size(min = 5, max = 30)
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
