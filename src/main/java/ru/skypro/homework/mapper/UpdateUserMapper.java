@@ -6,9 +6,9 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UpdateUserMapper {
-    UpdateUserMapper INSTANCE = Mappers.getMapper(UpdateUserMapper.class);
+
     @Mapping(source = "dto.firstName", target = "firstName")
     @Mapping(source = "dto.lastName", target = "lastName")
     @Mapping(source = "dto.phone", target = "phone")

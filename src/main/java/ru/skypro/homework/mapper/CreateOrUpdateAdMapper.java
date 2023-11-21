@@ -6,9 +6,8 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.model.Ad;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CreateOrUpdateAdMapper {
-    CreateOrUpdateAdMapper INSTANCE = Mappers.getMapper(CreateOrUpdateAdMapper.class);
 
     @Mapping(source = "dto.title", target = "title")
     @Mapping(source = "dto.price", target = "price")

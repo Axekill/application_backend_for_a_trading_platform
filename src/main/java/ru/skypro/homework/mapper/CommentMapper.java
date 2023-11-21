@@ -7,10 +7,8 @@ import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
-
 
     @Mapping(source = "user.id", target = "authorId")
     @Mapping(source = "user.image", target = "authorImage")

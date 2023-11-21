@@ -6,9 +6,8 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RegisterMapper {
-    RegisterMapper INSTANCE = Mappers.getMapper(RegisterMapper.class);
 
     @Mapping(source = "dto.username", target = "username")
     @Mapping(source = "dto.password", target = "password")

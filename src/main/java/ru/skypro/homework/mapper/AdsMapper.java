@@ -8,10 +8,8 @@ import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 
-@Mapper(uses = {AdMapper.class})
+@Mapper(uses = {AdMapper.class},componentModel = "spring")
 public interface AdsMapper {
-    AdsMapper INSTANCE = Mappers.getMapper(AdsMapper.class);
-
 
     @Mapping(source = "dto.listAdDTO", target = "result")
     AdsDTO toDTO(AdDTO dto);
