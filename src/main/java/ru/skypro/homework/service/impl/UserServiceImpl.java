@@ -60,10 +60,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setPhoto(MultipartFile image, Authentication authentication) {
+    public String setPhoto(MultipartFile image, Authentication authentication) {
         User user = findUser(authentication);
         user.setImage(image.getName());
-
+         return "Вы изменили фото";
     }
 
 

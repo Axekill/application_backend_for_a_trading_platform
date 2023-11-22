@@ -16,5 +16,5 @@ public interface UserService {
 
     UserDTO getUserInfo(Authentication authentication);
 
-    void setPhoto(MultipartFile image, Authentication authentication);
+    String setPhoto(MultipartFile image, Authentication authentication);
 }
