@@ -1,10 +1,9 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
@@ -12,8 +11,6 @@ import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.service.AdsService;
-
-import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -24,7 +21,6 @@ public class AdsServiceImpl implements AdsService {
     private AdMapper adMapper;
     private CreateOrUpdateAdMapper createOrUpdateAdMapper;
 
-
     //Ads
 
     public CreateOrUpdateAdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO) {
@@ -34,8 +30,9 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public CreateOrUpdateAdDTO updateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO, AdDTO adDTO) {
-        return adRepository.findById(adDTO.getId())
+    public CreateOrUpdateAdDTO updateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                        AdDTO adDTO, long id) {
+       return adRepository.findById(id)
                 .map(ad -> {
                     ad.setTitle(ad.getTitle());
                     ad.setPrice(ad.getPrice());
@@ -46,23 +43,26 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public List<AdDTO> getAllAds() {
-        return null;
+    public AdsDTO getAllAds() {
+        return (AdsDTO) adRepository.findAll();
     }
 
     @Override
     public AdDTO findByIdAd(long id) {
-        return null;
+        return adRepository.findById(id)
+                .map(adMapper::adDtoToDTO)
+                .orElse(null);
     }
 
     @Override
-    public ExtendedAdDTO getAdInfo(long id) {
+    public AdsDTO getAdInfoAuthorizedUser(Authentication authentication, AdsDTO adsDTO) {
+
         return null;
     }
 
     @Override
     public void deleteAd(long id) {
-
+        adRepository.deleteById(id);
     }
 
     @Override
