@@ -3,6 +3,8 @@ package ru.skypro.homework.service;
 import org.springframework.security.core.Authentication;
 import ru.skypro.homework.dto.*;
 
+import java.util.Collection;
+
 public interface AdsService {
 
     //ADS
@@ -25,7 +27,7 @@ public interface AdsService {
 
     //Comments
 
-    CommentsDTO getCommentsForAd(long id);
+    Collection<CommentsDTO> getCommentsForAd(long id);
 
     CreateOrUpdateCommentDTO createComment(long id);
 

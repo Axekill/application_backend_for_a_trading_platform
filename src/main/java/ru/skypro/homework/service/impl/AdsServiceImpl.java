@@ -12,6 +12,8 @@ import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.service.AdsService;
 
+import java.util.Collection;
+
 @Component
 @AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
@@ -32,12 +34,13 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CreateOrUpdateAdDTO updateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
                                         AdDTO adDTO, long id) {
-       return adRepository.findById(id)
+       return  adRepository.findById(id)
                 .map(ad -> {
                     ad.setTitle(ad.getTitle());
                     ad.setPrice(ad.getPrice());
                     ad.setDescription(ad.getDescription());
-                    return createAd(createOrUpdateAdDTO);
+                    Ad updateAd=adRepository.save(ad);
+                    return createOrUpdateAdMapper.toDTO(updateAd);
                 }).orElse(null);
 
     }
@@ -73,8 +76,8 @@ public class AdsServiceImpl implements AdsService {
 
     //Comments
     @Override
-    public CommentsDTO getCommentsForAd(long id) {
-        return null;
+    public Collection<CommentsDTO> getCommentsForAd(long id) {
+        return adRepository.getAllCommentsByAdId(id);
     }
 
     @Override

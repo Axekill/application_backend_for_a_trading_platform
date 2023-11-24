@@ -2,6 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,26 +16,28 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.service.UserService;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-
+    @Autowired
     private final UserRepository repository;
     private final PasswordEncoder encoder;
+    private UserMapper userMapper;
+    private UpdateUserMapper updateUserMapper;
+    private NewPasswordMapper newPasswordMapper;
 
-
-
-    public User findUser(Authentication authentication){
-        return  repository.findByUserName(authentication.getName()).orElseThrow();
+    public User findUser(Authentication authentication) {
+        return repository.findByUserName(authentication.getName()).orElseThrow();
     }
 
     @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication) {
         User user = findUser(authentication);
-        UpdateUserMapper.INSTANCE.toEntity(updateUserDTO);
+        updateUserMapper.toEntity(updateUserDTO);
         repository.save(user);
-        return UpdateUserMapper.INSTANCE.toDTO(user);
+        return updateUserMapper.toDTO(user);
     }
 
     @Override
@@ -44,10 +47,9 @@ public class UserServiceImpl implements UserService {
         if (encoder.matches(newPasswordDto.getCurrentPassword(), currentPassword)) {
             user.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
             repository.save(user);
-            NewPasswordMapper.INSTANCE.toDTO(user);
+            newPasswordMapper.toDTO(user);
             return newPasswordDto;
-        }
-        else{
+        } else {
             throw new Exception("ошибка изменения пароля");
         }
     }
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserInfo(Authentication authentication) {
         User user = findUser(authentication);
-        return UserMapper.INSTANCE.toDTO(user);
+        return userMapper.toDTO(user);
 
     }
 
