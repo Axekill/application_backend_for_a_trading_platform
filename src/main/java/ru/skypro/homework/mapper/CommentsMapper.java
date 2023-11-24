@@ -8,9 +8,9 @@ import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 
-@Mapper(uses = {CommentMapper.class})
+@Mapper(uses = {CommentMapper.class},componentModel = "spring")
 public interface CommentsMapper {
-    CommentsMapper INSTANCE = Mappers.getMapper(CommentsMapper.class);
+
     @Mapping(source = "dto.commentList", target = "result")
     CommentsDTO toDTO(CommentDTO dto);
 }

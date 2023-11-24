@@ -6,9 +6,9 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
 import ru.skypro.homework.model.Comment;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CreateOrUpdateCommentMapper {
-    CreateOrUpdateCommentMapper INSTANCE = Mappers.getMapper(CreateOrUpdateCommentMapper.class);
+
     @Mapping(source = "dto.text",target = "text")
     Comment toEntity(CreateOrUpdateCommentDTO dto);
 

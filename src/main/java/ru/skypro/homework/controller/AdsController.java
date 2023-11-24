@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.CommentService;
 
 @Slf4j
 @RestController
@@ -15,7 +14,6 @@ import ru.skypro.homework.service.CommentService;
 public class AdsController {
 
     private AdsService adsService;
-    private CommentService commentService;
 
     @PostMapping
 

@@ -7,15 +7,18 @@ import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AdMapper {
-    AdMapper INSTANCE = Mappers.getMapper(AdMapper.class);
 
     @Mapping(source = "user.id", target = "author")
-    AdDTO toDTO(Ad ad, User user);
+    AdDTO toDTO(User user);
+
+    AdDTO adDtoToDTO(Ad ad);
 
     @Mapping(source = "dto.author", target = "id")
     User toEntity(AdDTO dto);
+
+    Ad adToEntity(AdDTO dto);
 
 
 }

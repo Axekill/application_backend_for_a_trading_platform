@@ -6,9 +6,8 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.LoginDTO;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface LoginMapper {
- LoginMapper INSTANCE = Mappers.getMapper(LoginMapper.class);
     @Mapping(source = "dto.username",target = "username")
     @Mapping(source = "dto.password",target = "password" )
     User toEntity(LoginDTO dto);

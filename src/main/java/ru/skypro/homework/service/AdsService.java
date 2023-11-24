@@ -1,23 +1,41 @@
 package ru.skypro.homework.service;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdDTO;
-import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
-import ru.skypro.homework.dto.ExtendedAdDTO;
+import ru.skypro.homework.dto.*;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface AdsService {
 
+    //ADS
+    CreateOrUpdateAdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO);
 
-    List<AdDTO> getAllAds ();
 
-    AdDTO addAd (CreateOrUpdateAdDTO createOrUpdateAdDto , MultipartFile image);
+    CreateOrUpdateAdDTO updateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                 AdDTO adDTO, long id);
 
-    ExtendedAdDTO getAdInformation (Integer id);
+    AdsDTO getAllAds();
 
-    void deleteAd (Integer id , Authentication authentication);
+    AdDTO findByIdAd(long id);
+
+    AdsDTO getAdInfoAuthorizedUser(Authentication authentication, AdsDTO adsDTO);
+
+    void deleteAd(long id);
+
+    AdDTO updatePhotoAd(Long id);
+
+
+    //Comments
+
+    Collection<CommentsDTO> getCommentsForAd(long id);
+
+    CreateOrUpdateCommentDTO createComment(long id);
+
+    CommentDTO deleteComment(long adId, long commentId);
+
+    CreateOrUpdateCommentDTO updateComment(long adId, long commentId);
+
+
 
 
 

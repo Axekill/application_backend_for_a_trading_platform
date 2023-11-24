@@ -7,10 +7,9 @@ import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ExtendedAdMapper {
 
-    ExtendedAdMapper INSTANCE = Mappers.getMapper(ExtendedAdMapper.class);
 
     @Mapping(source = "ad.id", target = "id")
     @Mapping(source = "user.firstName", target = "authorFirstName")

@@ -7,10 +7,10 @@ import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.model.User;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface NewPasswordMapper {
 
-    NewPasswordMapper INSTANCE = Mappers.getMapper(NewPasswordMapper.class);
+
 
     //из юзера берем пароль и передаем его в дто
     @Mapping(target = "currentPassword", source = "user.password")
