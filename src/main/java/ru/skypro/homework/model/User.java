@@ -21,7 +21,7 @@ public class User {
     @EqualsAndHashCode.Include
     private Long id;
     //логин
-    private String username;
+    private String userName;
 
     private String firstName;
     private String lastName;

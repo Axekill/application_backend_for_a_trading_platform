@@ -21,7 +21,7 @@ public class CommentDTO {
     private String authorFirstName;
 
     @Schema(description = "дата и время создания комментария")
-    private long createdAt;
+    private LocalDateTime createdAt;
 
     @Schema(description = "текст")
     private String text;
