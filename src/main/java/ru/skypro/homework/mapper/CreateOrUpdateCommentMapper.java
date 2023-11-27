@@ -9,10 +9,10 @@ import ru.skypro.homework.model.Comment;
 @Mapper(componentModel = "spring")
 public interface CreateOrUpdateCommentMapper {
 
-    @Mapping(source = "dto.text",target = "text")
+    @Mapping(source = "text",target = "textComment")
     Comment toEntity(CreateOrUpdateCommentDTO dto);
 
 
-    @Mapping(source = "comment.text",target = "text")
+   @Mapping(source = "textComment",target = "text")
     CreateOrUpdateCommentDTO toDTO(Comment comment);
 }

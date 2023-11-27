@@ -13,12 +13,12 @@ public interface NewPasswordMapper {
 
 
     //из юзера берем пароль и передаем его в дто
-    @Mapping(target = "currentPassword", source = "user.password")
+    @Mapping(target = "currentPassword", source = "password")
     NewPasswordDTO toDTO(User user);
 
 
     //новый пароль из дто передаем в юзер
-    @Mapping(target= "password", source = "dto.newPassword")
+    @Mapping(target= "password", source = "newPassword")
     User toEntity(NewPasswordDTO dto);
 
   /*  @Mapping(source = "user.password", target = "currentPassword")
