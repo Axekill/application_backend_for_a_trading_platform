@@ -11,7 +11,7 @@ import java.util.List;
 public class AdsDTO {
 
     @Schema(description = "Лист объявлений")
-    private List<AdDTO> result;
+    private List<Ad> result;
 
     @Schema(description = "счётчик объявлений")
     private int count;
