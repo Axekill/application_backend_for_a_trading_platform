@@ -10,19 +10,23 @@ import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.User;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
+import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
     @Autowired
     private AdRepository adRepository;
+    private UserRepository userRepository;
     private CommentRepository commentRepository;
     private AdMapper adMapper;
     private CreateOrUpdateAdMapper createOrUpdateAdMapper;
@@ -30,23 +34,21 @@ public class AdsServiceImpl implements AdsService {
 
     //Ads
 
-    public CreateOrUpdateAdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO) {
-        Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
-        Ad savedAd = adRepository.save(ad);
-        return createOrUpdateAdMapper.toDTO(savedAd);
-    }
 
     @Override
-    public CreateOrUpdateAdDTO updateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                        AdDTO adDTO, long id) {
-        return adRepository.findById(id)
-                .map(ad -> {
-                    ad.setTitle(ad.getTitle());
-                    ad.setPrice(ad.getPrice());
-                    ad.setDescription(ad.getDescription());
-                    Ad updateAd = adRepository.save(ad);
-                    return createOrUpdateAdMapper.toDTO(updateAd);
-                }).orElse(null);
+    public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                                AdDTO adDTO, long id) {
+        Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
+        if (adRepository.findById(id) == null) {
+            Ad savedAd = adRepository.save(ad);
+            return createOrUpdateAdMapper.toDTO(savedAd);
+        } else {
+            ad.setTitle(ad.getTitle());
+            ad.setPrice(ad.getPrice());
+            ad.setDescription(ad.getDescription());
+            Ad updateAd = adRepository.save(ad);
+            return createOrUpdateAdMapper.toDTO(updateAd);
+        }
 
     }
 
@@ -72,9 +74,11 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public AdsDTO getAdInfoAuthorizedUser(Authentication authentication, AdsDTO adsDTO) {
-//authentication.getName()
-        return null;
+    public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
+        User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        return adRepository.findAllAdByUserId(user.getId()).stream()
+                .map(adMapper::adDtoToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -83,8 +87,14 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public AdDTO updatePhotoAd(Long id) {
-        return null;
+    public AdDTO updatePhotoAd(Long id, AdDTO adDTO) {
+        Ad ad = adMapper.adToEntity(adDTO);
+        return adRepository.findById(id)
+                .map(i -> {
+                    i.setImage(i.getImage());
+                    Ad updateImage = adRepository.save(ad);
+                    return adMapper.adDtoToDTO(updateImage);
+                }).orElse(null);
     }
 
 
@@ -95,20 +105,22 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO) {
+    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long id) {
 
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
-        Comment saveCom = commentRepository.save(comment);
-        return createOrUpdateCommentMapper.toDTO(saveCom);
+        if (commentRepository.findById(id) == null) {
+            Comment saveCom = commentRepository.save(comment);
+            return createOrUpdateCommentMapper.toDTO(saveCom);
+        } else {
+            comment.setTextComment(comment.getTextComment());
+            Comment updateComment = commentRepository.save(comment);
+            return createOrUpdateCommentMapper.toDTO(updateComment);
+        }
     }
 
     @Override
-    public CommentDTO deleteComment(long adId, long commentId) {
-        return null;
+    public void deleteComment(long adId, long commentId) {
+        adRepository.deleteCommentByIdInFindIdAd(adId, commentId);
     }
 
-    @Override
-    public CreateOrUpdateCommentDTO updateComment(long adId, long commentId) {
-        return null;
-    }
 }
