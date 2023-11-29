@@ -21,7 +21,8 @@ public class UsersController {
     private UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<NewPasswordDTO> setPassword(@RequestBody NewPasswordDTO newPasswordDto, Authentication authentication) throws Exception {
+    public ResponseEntity<NewPasswordDTO> setPassword(@RequestBody NewPasswordDTO newPasswordDto,
+                                                      Authentication authentication) throws Exception {
         return ResponseEntity.ok(userService.setPassword(newPasswordDto, authentication));
     }
 

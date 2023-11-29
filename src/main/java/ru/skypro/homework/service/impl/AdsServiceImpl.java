@@ -105,10 +105,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long id) {
-
+    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId ) {
+        adRepository.findById(adId).orElseThrow();
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
-        if (commentRepository.findById(id) == null) {
+        if (commentRepository.findById(commentId) == null) {
             Comment saveCom = commentRepository.save(comment);
             return createOrUpdateCommentMapper.toDTO(saveCom);
         } else {
@@ -117,6 +117,7 @@ public class AdsServiceImpl implements AdsService {
             return createOrUpdateCommentMapper.toDTO(updateComment);
         }
     }
+
 
     @Override
     public void deleteComment(long adId, long commentId) {
