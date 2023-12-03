@@ -16,9 +16,12 @@ public class Ad {
     private Long id;
 
     private String title;
-    private String image;
     private int price;
     private String description;
+
+    @OneToOne
+    @JoinColumn(name = "image")
+    private Image image;
 
     @ManyToOne
     @JoinColumn(name = "author")

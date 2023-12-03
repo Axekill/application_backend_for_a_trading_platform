@@ -15,7 +15,10 @@ import ru.skypro.homework.mapper.UpdateUserMapper;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     private UpdateUserMapper updateUserMapper;
     private NewPasswordMapper newPasswordMapper;
+    private ImageService imageService;
 
     public User findUser(Authentication authentication) {
         return repository.findByUserName(authentication.getName()).orElseThrow();
@@ -62,10 +66,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String setPhoto(MultipartFile image, Authentication authentication) {
+    public void setPhoto(MultipartFile image, Authentication authentication) throws IOException {
         User user = findUser(authentication);
-        user.setImage(image.getName());
-         return "Вы изменили фото";
+        user.setImage(imageService.uploadImage(image));
+        repository.save(user);
     }
 
 

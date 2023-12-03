@@ -4,15 +4,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
+import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.service.AdsService;
 
@@ -31,6 +34,7 @@ public class AdsServiceImpl implements AdsService {
     private AdMapper adMapper;
     private CreateOrUpdateAdMapper createOrUpdateAdMapper;
     private CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
+    private ImageRepository imageRepository;
 
     //Ads
 
@@ -43,6 +47,7 @@ public class AdsServiceImpl implements AdsService {
             Ad savedAd = adRepository.save(ad);
             return createOrUpdateAdMapper.toDTO(savedAd);
         } else {
+            ad.setId(ad.getId());
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
             ad.setDescription(ad.getDescription());
@@ -87,14 +92,14 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public AdDTO updatePhotoAd(Long id, AdDTO adDTO) {
-        Ad ad = adMapper.adToEntity(adDTO);
-        return adRepository.findById(id)
-                .map(i -> {
-                    i.setImage(i.getImage());
-                    Ad updateImage = adRepository.save(ad);
-                    return adMapper.adDtoToDTO(updateImage);
-                }).orElse(null);
+    public void updatePhotoAd(Long id, MultipartFile imageFile,
+                              Authentication authentication)throws Exception {
+        User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        Ad ad = adRepository.findById(id).orElseThrow();
+        Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
+        image.setData(imageFile.getBytes());
+        image.setFileSize(imageFile.getSize());
+        imageRepository.save(image);
     }
 
 

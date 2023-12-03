@@ -27,7 +27,11 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
-    private String image;
+
+    @OneToOne
+    @JoinColumn(name = "image")
+    private Image image;
+
     @Size(min = 5, max = 30)
     private String password;
 

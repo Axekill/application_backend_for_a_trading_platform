@@ -6,6 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.dto.UserDTO;
+
+import java.io.IOException;
+
 @Service
 public interface UserService {
 
@@ -16,5 +19,5 @@ public interface UserService {
 
     UserDTO getUserInfo(Authentication authentication);
 
-    String setPhoto(MultipartFile image, Authentication authentication);
+    void setPhoto(MultipartFile image, Authentication authentication) throws IOException;
 }
