@@ -11,22 +11,25 @@ public interface AdsService {
 
     //ADS
 
+
     CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
                                          AdDTO adDTO, long id);
+
     AdsDTO getAllAds();
 
     AdDTO findByIdAd(long id);
+
 
     List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication);
 
     void deleteAd(long id);
 
-    void updatePhotoAd(Long id, MultipartFile imageFile,
-                       Authentication authentication) throws Exception;
+    void updatePhotoAd(Long id, Authentication authentication, MultipartFile image, String userName);
+
 
     //Comments
-    Collection<CommentsDTO> getCommentsForAd(long id);
 
+    Collection<CommentsDTO> getCommentsForAd(long id);
 
     CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
 
