@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 
 import java.util.Collection;
@@ -23,7 +24,7 @@ public interface AdsService {
 
     void deleteAd(long id);
 
-    AdDTO updatePhotoAd(Long id, AdDTO adDTO);
+    void updatePhotoAd(Long id, Authentication authentication, MultipartFile image, String userName);
 
 
     //Comments
