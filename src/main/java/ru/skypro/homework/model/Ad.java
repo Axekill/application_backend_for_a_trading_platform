@@ -19,9 +19,9 @@ public class Ad {
     private int price;
     private String description;
 
-    @OneToOne
+    // @OneToOne
     @JoinColumn(name = "image")
-    private Image image;
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "author")

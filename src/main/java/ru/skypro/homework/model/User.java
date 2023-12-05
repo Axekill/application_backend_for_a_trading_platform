@@ -28,9 +28,9 @@ public class User {
     private String email;
     private String phone;
 
-    @OneToOne
+  //  @OneToOne
     @JoinColumn(name = "image")
-    private Image image;
+    private String image;
 
     @Size(min = 5, max = 30)
     private String password;
