@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
 
     @OneToMany(mappedBy = "author")
     private List<Ad> adList;
