@@ -17,7 +17,9 @@ import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(value = "http://localhost:3000")
@@ -38,10 +40,12 @@ public class UsersController {
             }
     )
     @PostMapping("/set_password")
-    public ResponseEntity<NewPasswordDTO> setPassword(@RequestBody NewPasswordDTO newPasswordDto,
-                                                      Authentication authentication) throws Exception {
-        return ResponseEntity.ok(userService.setPassword(newPasswordDto, authentication));
+    public ResponseEntity setPassword(@RequestBody NewPasswordDTO newPasswordDto,
+                                      Authentication authentication) throws Exception {
+        userService.setPassword(newPasswordDto, authentication);
+        return ResponseEntity.ok().build();
     }
+
     @Operation(
             summary = "Получение информации о пользователе",
             responses = {
@@ -59,6 +63,7 @@ public class UsersController {
     public ResponseEntity<UserDTO> getUser(Authentication authentication) {
         return ResponseEntity.ok(userService.getUserInfo(authentication));
     }
+
     @Operation(
             summary = "Обновление данных пользователя",
             responses = {
@@ -96,16 +101,12 @@ public class UsersController {
             }
     )
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateUserImage(@RequestParam MultipartFile image, Authentication authentication) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userName = auth.getName();
-        userService.setPhoto(image, authentication, userName);
+    public ResponseEntity<UserDTO> updateUserImage(@RequestPart("image") MultipartFile image,
+                                                   Authentication authentication) throws IOException {
 
+        userService.setPhoto(image, authentication);
         return ResponseEntity.ok().build();
     }
-
-
-
 
 
 }

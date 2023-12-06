@@ -12,7 +12,7 @@ public interface UserService {
 
     UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication);
 
-    NewPasswordDTO setPassword(NewPasswordDTO newPasswordDto, Authentication authentication) throws Exception;
+    void setPassword(NewPasswordDTO newPasswordDto, Authentication authentication) throws Exception;
 
     UserDTO getUserInfo(Authentication authentication);
 
