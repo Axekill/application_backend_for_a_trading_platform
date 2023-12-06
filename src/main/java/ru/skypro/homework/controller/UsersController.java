@@ -26,7 +26,19 @@ import java.io.IOException;
 @RequestMapping("/user")
 public class UsersController {
     private UserService userService;
-
+    @Operation(
+            summary = "Смена пароля",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized"
+                    )
+            }
+    )
     @PostMapping("/set_password")
     public ResponseEntity setPassword(@RequestBody NewPasswordDTO newPasswordDto,
                                       Authentication authentication) throws Exception {
