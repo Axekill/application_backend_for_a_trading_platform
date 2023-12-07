@@ -72,7 +72,7 @@ public class AdsController {
 
     //получаем все коментарии объявления
     @GetMapping("/{id}/comments")
-    public ResponseEntity<Collection<CommentsDTO>> getComments(@PathVariable Long id) {
+    public ResponseEntity<Collection<CommentDTO>> getComments(@PathVariable Long id) {
 
         return ResponseEntity.ok(adsService.getCommentsForAd(id));
     }

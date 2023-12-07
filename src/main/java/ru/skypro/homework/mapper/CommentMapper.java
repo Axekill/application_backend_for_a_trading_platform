@@ -5,9 +5,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 
-@Mapper(componentModel = "spring",uses={UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface CommentMapper {
 
     @Mapping(source = "user.id", target = "authorId")
@@ -16,10 +17,19 @@ public interface CommentMapper {
     CommentDTO toDTO(Comment comment);
 
 
-   @Mapping(target = "id", source = "dto.authorId")
+    @Mapping(target = "id", source = "dto.authorId")
     @Mapping(target = "image", source = "dto.authorImage")
     @Mapping(target = "firstName", source = "dto.authorFirstName")
     User toEntity(CommentDTO dto);
+
+    default String image(Image image) {
+        return String.valueOf(image.getId());
+    }
+
+    default Image imageToString(String authorImage){
+        return new Image();
+    }
+    ;
 
 
 }

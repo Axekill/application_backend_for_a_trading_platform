@@ -3,6 +3,7 @@ package ru.skypro.homework.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.skypro.homework.model.Image;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class AdDTO {
     private Long author;
 
     @Schema(description = "фото в объявлении")
-    private String image;
+    private Image image;
 
     @Schema(description = "цена")
     private int price;

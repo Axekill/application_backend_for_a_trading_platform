@@ -38,9 +38,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "user")
     private List<Ad> adList;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "user")
     private List<Comment> commentList;
 }

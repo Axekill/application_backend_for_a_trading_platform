@@ -2,6 +2,7 @@ package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import ru.skypro.homework.model.Image;
 
 
 import javax.persistence.GeneratedValue;
@@ -37,5 +38,5 @@ public class UserDTO {
     private Role role;
 
     @Schema(description = "фото пользователя")
-    private String image;
+    private Image image;
 }

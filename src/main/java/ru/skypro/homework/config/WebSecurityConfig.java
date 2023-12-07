@@ -31,6 +31,7 @@ public class WebSecurityConfig {
     @Autowired
     private SecurityUserService securityUserService;
 
+
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -42,7 +43,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.userDetailsService(securityUserService)
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(
@@ -60,13 +61,13 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
+   /* @Bean
     public AuthenticationManager manager() {
         var provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(securityUserService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager();
-    }
+    }*/
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

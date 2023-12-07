@@ -25,7 +25,7 @@ public interface AdsService {
                        Authentication authentication) throws Exception;
 
     //Comments
-    Collection<CommentsDTO> getCommentsForAd(long id);
+    Collection<CommentDTO> getCommentsForAd(long id);
 
 
     CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
