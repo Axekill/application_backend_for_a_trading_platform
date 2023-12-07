@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -61,9 +61,11 @@ public class AdsController {
 
     // обновить картинрку объявления
     @PatchMapping("{id}/image")
-    public ResponseEntity<?> updateImage(@PathVariable Long id,
-                                         @RequestParam String image) {
-        return null;
+    public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
+                                         Authentication authentication,
+                                         @RequestParam MultipartFile image)throws Exception {
+        adsService.updatePhotoAd(id,image,authentication);
+        return ResponseEntity.ok().build();
     }
 
     //Коментарии
@@ -82,7 +84,7 @@ public class AdsController {
                                                                @PathVariable Long commentId,
                                                                @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO
     ) {
-        return ResponseEntity.ok(adsService.createComment(createOrUpdateCommentDTO, adId, commentId));
+        return ResponseEntity.ok(adsService.createOrUpdateComment(createOrUpdateCommentDTO, adId, commentId));
     }
 
     //удаление коментария из объявления

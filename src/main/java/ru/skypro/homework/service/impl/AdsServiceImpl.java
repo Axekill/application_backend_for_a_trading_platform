@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -17,6 +18,7 @@ import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class AdsServiceImpl implements AdsService {
     private CreateOrUpdateAdMapper createOrUpdateAdMapper;
     private CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
     private ImageRepository imageRepository;
+    private SecurityCheck securityCheck;
 
     //Ads
 
@@ -42,6 +45,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
                                                 AdDTO adDTO, long id) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
         if (adRepository.findById(id) == null) {
             Ad savedAd = adRepository.save(ad);
@@ -88,18 +92,21 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteAd(long id) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.deleteById(id);
     }
 
     @Override
     public void updatePhotoAd(Long id, MultipartFile imageFile,
-                              Authentication authentication)throws Exception {
+                              Authentication authentication) throws Exception {
         User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
-        Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
-        image.setData(imageFile.getBytes());
-        image.setFileSize(imageFile.getSize());
-        imageRepository.save(image);
+        if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
+            Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
+            image.setData(imageFile.getBytes());
+            image.setFileSize(imageFile.getSize());
+            imageRepository.save(image);
+        }
     }
 
 
@@ -110,10 +117,13 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId ) {
+    public CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                          long adId, long commentId) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.findById(adId).orElseThrow();
+
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
-        if (commentRepository.findById(commentId) == null) {
+        if (commentRepository.findById(commentId).isEmpty()) {
             Comment saveCom = commentRepository.save(comment);
             return createOrUpdateCommentMapper.toDTO(saveCom);
         } else {
@@ -126,6 +136,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteComment(long adId, long commentId) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.deleteCommentByIdInFindIdAd(adId, commentId);
     }
 
