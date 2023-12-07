@@ -1,13 +1,10 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.mapper.AdMapper;
@@ -15,31 +12,23 @@ import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
+import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
-@Service
-
-@Data
+@Component
+@AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
-
     @Autowired
     private AdRepository adRepository;
     private UserRepository userRepository;
@@ -47,13 +36,8 @@ public class AdsServiceImpl implements AdsService {
     private AdMapper adMapper;
     private CreateOrUpdateAdMapper createOrUpdateAdMapper;
     private CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
-    private final UserServiceImpl userServiceImpl;
-
-    @Value("${file.path.image}")
-    private String filePath;
-
-
-
+    private ImageRepository imageRepository;
+    private SecurityCheck securityCheck;
 
     //Ads
 
@@ -61,11 +45,13 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
                                                 AdDTO adDTO, long id) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
         if (adRepository.findById(id) == null) {
             Ad savedAd = adRepository.save(ad);
             return createOrUpdateAdMapper.toDTO(savedAd);
         } else {
+            ad.setId(ad.getId());
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
             ad.setDescription(ad.getDescription());
@@ -106,29 +92,21 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteAd(long id) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.deleteById(id);
     }
 
     @Override
-    public void updatePhotoAd(Long id, Authentication authentication, MultipartFile image, String userName) {
-        User user = userServiceImpl.findUser(authentication);
+    public void updatePhotoAd(Long id, MultipartFile imageFile,
+                              Authentication authentication) throws Exception {
+        User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
-        if (ad == null) {
-
-            throw new IllegalArgumentException();
+        if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
+            Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
+            image.setData(imageFile.getBytes());
+            image.setFileSize(imageFile.getSize());
+            imageRepository.save(image);
         }
-        if (ad.getImage() != null) {
-            try {
-                Files.delete(Path.of(System.getProperty("user.dir") + "/" + filePath + ad.getImage().replaceAll("/ads/get", "")));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        String imageName = uploadImage(image, userName);
-        ad.setImage(getUrlImage(imageName));
-        ad.setUser(user);
-        adRepository.save(ad);
-
     }
 
 
@@ -139,10 +117,13 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId ) {
+    public CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                          long adId, long commentId) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.findById(adId).orElseThrow();
+
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
-        if (commentRepository.findById(commentId) == null) {
+        if (commentRepository.findById(commentId).isEmpty()) {
             Comment saveCom = commentRepository.save(comment);
             return createOrUpdateCommentMapper.toDTO(saveCom);
         } else {
@@ -155,34 +136,8 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteComment(long adId, long commentId) {
+        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.deleteCommentByIdInFindIdAd(adId, commentId);
     }
 
-
-    private String uploadImage(MultipartFile image, String userName) {
-        String dir = System.getProperty("user.dir") + "/" + filePath;
-        String imageName = nameFile(userName, image);
-        try {
-            Files.createDirectories(Path.of(dir));
-            image.transferTo(new File(dir + "/" + imageName));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return imageName;
-    }
-
-    private String nameFile(String userName, MultipartFile image) {
-        return String.format("image%s_%s.%s", userName, UUID.randomUUID(), extension(image.getOriginalFilename()));
-    }
-
-    private String getUrlImage(String fileName) {
-        return "/ads/get/" + fileName;
-    }
-
-    private String extension(String fileName) {
-        return StringUtils.getFilenameExtension(fileName);
-    }
-
 }
-
-

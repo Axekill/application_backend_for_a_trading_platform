@@ -204,15 +204,12 @@ public class AdsController {
             }
     )
     @PatchMapping("{id}/image")
-    public ResponseEntity<String> updateImage(@PathVariable Long id,
-                                              Authentication authentication,
-                                              @RequestParam MultipartFile image) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userName = auth.getName();
-        adsService.updatePhotoAd(id, authentication, image, userName );
+    public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
+                                         Authentication authentication,
+                                         @RequestParam MultipartFile image)throws Exception {
+        adsService.updatePhotoAd(id,image,authentication);
         return ResponseEntity.ok().build();
     }
-
 
     //Коментарии
 
@@ -273,9 +270,9 @@ public class AdsController {
     @PatchMapping("{adId}/comments/{commentsId}")
     public ResponseEntity<CreateOrUpdateCommentDTO> addComment(@PathVariable Long adId,
                                                                @PathVariable Long commentId,
-                                                               @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
-                                                               @PathVariable String commentsId) {
-        return ResponseEntity.ok(adsService.createComment(createOrUpdateCommentDTO, adId, commentId));
+                                                               @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO
+    ) {
+        return ResponseEntity.ok(adsService.createOrUpdateComment(createOrUpdateCommentDTO, adId, commentId));
     }
 
     @Operation(

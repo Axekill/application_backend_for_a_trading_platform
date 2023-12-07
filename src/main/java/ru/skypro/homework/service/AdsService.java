@@ -31,7 +31,7 @@ public interface AdsService {
 
     Collection<CommentsDTO> getCommentsForAd(long id);
 
-    CreateOrUpdateCommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
+    CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
 
     void deleteComment(long adId, long commentId);
 
