@@ -239,7 +239,7 @@ public class AdsController {
             }
     )
     @GetMapping("/{id}/comments")
-    public ResponseEntity<Collection<CommentsDTO>> getComments(@PathVariable Long id) {
+    public ResponseEntity<Collection<CommentDTO>> getComments(@PathVariable Long id) {
 
         return ResponseEntity.ok(adsService.getCommentsForAd(id));
     }

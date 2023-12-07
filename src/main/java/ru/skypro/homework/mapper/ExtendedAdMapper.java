@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 
 @Mapper(componentModel = "spring")
@@ -25,5 +26,11 @@ public interface ExtendedAdMapper {
 
     Ad adToEntity(ExtendedAdDTO dto);
 
+    default String image (Image image){
+        return String.valueOf(image.getId());
+    };
+    default Image imageToString(String authorImage){
+        return new Image();
+    }
 
 }

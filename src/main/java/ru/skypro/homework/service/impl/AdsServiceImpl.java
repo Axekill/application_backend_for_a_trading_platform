@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.mapper.AdMapper;
+import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
 import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
 import ru.skypro.homework.model.Ad;
@@ -38,6 +39,7 @@ public class AdsServiceImpl implements AdsService {
     private CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
     private ImageRepository imageRepository;
     private SecurityCheck securityCheck;
+    private CommentMapper commentMapper;
 
     //Ads
 
@@ -112,8 +114,11 @@ public class AdsServiceImpl implements AdsService {
 
     //Comments
     @Override
-    public Collection<CommentsDTO> getCommentsForAd(long id) {
-        return adRepository.getAllCommentsByAdId(id);
+    public Collection<CommentDTO> getCommentsForAd(long id) {
+
+        return commentRepository.getAllCommentsByAdId(id).stream()
+                .map(commentMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -137,7 +142,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public void deleteComment(long adId, long commentId) {
         userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        adRepository.deleteCommentByIdInFindIdAd(adId, commentId);
+        commentRepository.deleteCommentByIdAndByCommentId(adId, commentId);
     }
 
 }
