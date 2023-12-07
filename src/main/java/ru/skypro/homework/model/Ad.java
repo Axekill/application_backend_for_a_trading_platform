@@ -21,7 +21,7 @@ public class Ad {
 
     @OneToOne
     @JoinColumn(name = "image")
-    private String image;
+    private Image image;
 
     @ManyToOne
     @JoinColumn(name = "author")
