@@ -24,7 +24,8 @@ public interface AdsService {
 
     void deleteAd(long id);
 
-    void updatePhotoAd(Long id, Authentication authentication, MultipartFile image, String userName);
+    void updatePhotoAd(Long id, MultipartFile imageFile,
+                       Authentication authentication) throws Exception;
 
 
     //Comments

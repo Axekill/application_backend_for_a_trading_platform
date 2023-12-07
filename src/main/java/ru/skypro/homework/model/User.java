@@ -28,16 +28,15 @@ public class User {
     private String email;
     private String phone;
 
-  //  @OneToOne
+    @OneToOne
     @JoinColumn(name = "image")
-    private String image;
+    private Image image;
 
     @Size(min = 5, max = 30)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
 
     @OneToMany(mappedBy = "author")

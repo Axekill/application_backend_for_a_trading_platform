@@ -26,6 +26,7 @@ import java.util.List;
 public class AdsController {
 
     private AdsService adsService;
+
     @Operation(
             summary = "Обновление информации об объявлении",
             responses = {
@@ -114,6 +115,7 @@ public class AdsController {
         }
         return ResponseEntity.ok(adDTO);
     }
+
     @Operation(
             summary = "Удаление объявления",
             responses = {
@@ -205,9 +207,9 @@ public class AdsController {
     )
     @PatchMapping("{id}/image")
     public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
-                                         Authentication authentication,
-                                         @RequestParam MultipartFile image)throws Exception {
-        adsService.updatePhotoAd(id,image,authentication);
+                                              Authentication authentication,
+                                              @RequestParam MultipartFile image) throws Exception {
+        adsService.updatePhotoAd(id, image, authentication);
         return ResponseEntity.ok().build();
     }
 

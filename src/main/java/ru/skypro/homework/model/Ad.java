@@ -19,7 +19,7 @@ public class Ad {
     private int price;
     private String description;
 
-    // @OneToOne
+    @OneToOne
     @JoinColumn(name = "image")
     private String image;
 
