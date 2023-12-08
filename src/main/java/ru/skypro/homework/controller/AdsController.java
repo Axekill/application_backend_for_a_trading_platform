@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/ads")
 public class AdsController {
 
-    private AdsService adsService;
+    private final AdsService adsService;
 
     @Operation(
             summary = "Обновление информации об объявлении",

@@ -14,7 +14,7 @@ import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.mapper.NewPasswordMapper;
 import ru.skypro.homework.mapper.UpdateUserMapper;
 import ru.skypro.homework.mapper.UserMapper;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.security.SecurityUserService;
@@ -38,45 +38,45 @@ public class UserServiceImpl implements UserService {
     private NewPasswordMapper newPasswordMapper;
     private ImageService imageService;
 
-    public User findUser(Authentication authentication) {
+    public Users findUser(Authentication authentication) {
         return repository.findByUserName(authentication.getName()).orElseThrow();
     }
 
     @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication) {
         log.info("Изменение данных авторизированного пользователя");
-        User user = findUser(authentication);
-        user.setFirstName(updateUserDTO.getFirstName());
-        user.setLastName(updateUserDTO.getLastName());
-        user.setPhone(updateUserDTO.getPhone());
-        return updateUserMapper.toDTO(repository.save(user));
+        Users users = findUser(authentication);
+        users.setFirstName(updateUserDTO.getFirstName());
+        users.setLastName(updateUserDTO.getLastName());
+        users.setPhone(updateUserDTO.getPhone());
+        return updateUserMapper.toDTO(repository.save(users));
     }
 
     @Override
     public void setPassword(NewPasswordDTO newPasswordDto, Authentication authentication) throws Exception {
         log.info("создайте новый пароль");
-        User user = repository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        if (encoder.matches(newPasswordDto.getCurrentPassword(), user.getPassword())) {
-            user.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
-            repository.save(user);
+        Users users = repository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        if (encoder.matches(newPasswordDto.getCurrentPassword(), users.getPassword())) {
+            users.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
+            repository.save(users);
             log.info("Пароль обновлен!");
-            securityUserService.loadUserByUsername(user.getUserName());
+            securityUserService.loadUserByUsername(users.getUserName());
         }
 
     }
 
     @Override
     public UserDTO getUserInfo(Authentication authentication) {
-        User user = findUser(authentication);
-        return userMapper.toDTO(user);
+        Users users = findUser(authentication);
+        return userMapper.toDTO(users);
 
     }
 
     @Override
     public void setPhoto(MultipartFile image, Authentication authentication) throws IOException {
-        User user = securityCheck.checkedUser(authentication);
-        user.setImage(imageService.uploadImage(image));
-        repository.save(user);
+        Users users = securityCheck.checkedUser(authentication);
+        users.setImage(imageService.uploadImage(image));
+        repository.save(users);
     }
 
 

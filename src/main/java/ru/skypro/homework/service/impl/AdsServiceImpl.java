@@ -14,7 +14,7 @@ import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.Image;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.repostitory.ImageRepository;
@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
     @Autowired
-    private AdRepository adRepository;
-    private UserRepository userRepository;
-    private CommentRepository commentRepository;
-    private AdMapper adMapper;
-    private CreateOrUpdateAdMapper createOrUpdateAdMapper;
-    private CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
-    private ImageRepository imageRepository;
-    private SecurityCheck securityCheck;
-    private CommentMapper commentMapper;
+    private final AdRepository adRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final AdMapper adMapper;
+    private final CreateOrUpdateAdMapper createOrUpdateAdMapper;
+    private final CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
+    private final ImageRepository imageRepository;
+    private final SecurityCheck securityCheck;
+    private final CommentMapper commentMapper;
 
     //Ads
 
@@ -49,7 +49,7 @@ public class AdsServiceImpl implements AdsService {
                                                 AdDTO adDTO, long id) {
         userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
-        if (adRepository.findById(id) == null) {
+        if (adRepository.findById(id).isEmpty()) {
             Ad savedAd = adRepository.save(ad);
             return createOrUpdateAdMapper.toDTO(savedAd);
         } else {
@@ -86,8 +86,8 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
-        User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
-        return adRepository.findAllAdByUserId(user.getId()).stream()
+        Users users = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        return adRepository.findAllAdByUsersId(users.getId()).stream()
                 .map(adMapper::adDtoToDTO)
                 .collect(Collectors.toList());
     }
@@ -101,9 +101,9 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public void updatePhotoAd(Long id, MultipartFile imageFile,
                               Authentication authentication) throws Exception {
-        User user = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        Users users = userRepository.findByUserName(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
-        if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
+        if (securityCheck.checkRole(users) || securityCheck.checkAuthorAd(users, ad)) {
             Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
             image.setData(imageFile.getBytes());
             image.setFileSize(imageFile.getSize());

@@ -25,7 +25,7 @@ import java.io.IOException;
 @CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/user")
 public class UsersController {
-    private UserService userService;
+    private final UserService userService;
     @Operation(
             summary = "Смена пароля",
             responses = {
