@@ -35,11 +35,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private UserMapper userMapper;
     private UpdateUserMapper updateUserMapper;
-    private NewPasswordMapper newPasswordMapper;
     private ImageService imageService;
 
     public Users findUser(Authentication authentication) {
-        return repository.findByUserName(authentication.getName()).orElseThrow();
+        return repository.findByEmail(authentication.getName()).orElseThrow();
     }
 
     @Override
@@ -55,12 +54,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setPassword(NewPasswordDTO newPasswordDto, Authentication authentication) throws Exception {
         log.info("создайте новый пароль");
-        Users users = repository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Users users = repository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         if (encoder.matches(newPasswordDto.getCurrentPassword(), users.getPassword())) {
             users.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
             repository.save(users);
             log.info("Пароль обновлен!");
-            securityUserService.loadUserByUsername(users.getUserName());
+            securityUserService.loadUserByUsername(users.getEmail());
         }
 
     }

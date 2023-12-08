@@ -80,7 +80,7 @@ public class SecurityCheck {
      * проверка авторизирован ли пользователь
      */
     public Users checkedUser(Authentication authentication) {
-        Optional<Users> user = userRepository.findByUserName(authentication.getName());
+        Optional<Users> user = userRepository.findByEmail(authentication.getName());
         if (user.isEmpty()) {
             log.info("пользователь не авторизирован");
             throw new NullPointerException();

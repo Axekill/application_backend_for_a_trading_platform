@@ -24,7 +24,7 @@ public class UserSecurity implements UserDetails {
         Set<Role> roles = Collections.singleton(register.getRole());
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         for (Role role : roles) {
-            authorityList.add(new SimpleGrantedAuthority("ROLE " + role.name()));
+            authorityList.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
         }
         return authorityList;
     }
@@ -36,7 +36,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return register.getUserName();
+        return register.getUsername();
     }
 
     @Override

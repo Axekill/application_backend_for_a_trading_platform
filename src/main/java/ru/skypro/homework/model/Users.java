@@ -14,10 +14,12 @@ import java.util.List;
 @Table(name = "users")
 public class Users {
     @Id
+    @Column(name = "id",nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //логин
-    private String userName;
+//    @Column(name = "user_name")
+//    private String username;
 
     private String firstName;
     private String lastName;
