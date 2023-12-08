@@ -9,6 +9,7 @@ import ru.skypro.homework.model.Users;
 public interface RegisterMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "image", ignore = true)
     @Mapping(target = "email", source = "username")
     Users toEntity(RegisterDTO dto);
 

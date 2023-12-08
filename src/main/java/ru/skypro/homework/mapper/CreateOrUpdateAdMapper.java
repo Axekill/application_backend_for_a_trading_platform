@@ -8,14 +8,10 @@ import ru.skypro.homework.model.Ad;
 
 @Mapper(componentModel = "spring")
 public interface CreateOrUpdateAdMapper {
-
-  /*  @Mapping(source = "dto.title", target = "title")
-    @Mapping(source = "dto.price", target = "price")
-    @Mapping(source = "dto.description", target = "description")*/
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "image", ignore = true)
     Ad toEntity(CreateOrUpdateAdDTO dto);
 
-  /*  @Mapping(source = "ad.title", target = "title")
-    @Mapping(source = "ad.price", target = "price")
-    @Mapping(source = "ad.description", target = "description")*/
+
     CreateOrUpdateAdDTO toDTO(Ad ad);
 }
