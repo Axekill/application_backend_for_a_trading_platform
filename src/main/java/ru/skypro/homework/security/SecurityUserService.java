@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.dto.Role;
@@ -29,8 +30,8 @@ public class SecurityUserService implements UserDetailsService {
         return repository.findByEmail(user).isPresent();
     }
 
-    public void createUser(RegisterDTO register) {
-        repository.save(mapper.toEntity(register));
+    public void createUser(Users users) {
+        repository.save(users);
     }
 
 }
