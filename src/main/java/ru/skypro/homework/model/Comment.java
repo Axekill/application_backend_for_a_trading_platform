@@ -1,9 +1,6 @@
 package ru.skypro.homework.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -21,7 +18,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "author")
-    private User user;
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "ad")

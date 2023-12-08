@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 -- changeset Andrey:1
 
-create table user (
+create table users (
 id bigint primary key,
 user_name text,
 password varchar(64),
@@ -19,7 +19,7 @@ image_id int,
 price int not null ,
 title text,
 description text,
-foreign key (author_id) references user(id));
+foreign key (author_id) references users(id));
 
 create table comment (
 id bigint primary key ,
@@ -28,7 +28,7 @@ author_id int,
 created_at timestamp,
 text_comment text not null ,
 foreign key (ad_id) references ad (id),
-foreign  key  (author_id) references  user(id));
+foreign  key  (author_id) references  users(id));
 
 create table image (
 id bigint primary key ,

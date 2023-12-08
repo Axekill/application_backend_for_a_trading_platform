@@ -1,14 +1,13 @@
 package ru.skypro.homework.repostitory;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<Users, Long> {
 
-    Optional<User> findByUserName(String userName);
+    Optional<Users> findByUserName(String userName);
 
 
 

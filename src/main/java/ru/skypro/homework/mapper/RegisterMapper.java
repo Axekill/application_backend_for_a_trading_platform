@@ -1,10 +1,8 @@
 package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.RegisterDTO;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 
 @Mapper(componentModel = "spring")
 public interface RegisterMapper {
@@ -15,7 +13,7 @@ public interface RegisterMapper {
     @Mapping(source = "dto.lastName", target = "lastName")
     @Mapping(source = "dto.phone", target = "phone")
     @Mapping(source = "dto.role", target = "role")*/
-    User toEntity(RegisterDTO dto);
+    Users toEntity(RegisterDTO dto);
 
 
    /* @Mapping(source = "user.userName", target = "userName")
@@ -24,7 +22,7 @@ public interface RegisterMapper {
     @Mapping(source = "user.lastName", target = "lastName")
     @Mapping(source = "user.phone", target = "phone")
     @Mapping(source = "user.role", target = "role")*/
-    RegisterDTO toDTO(User user);
+    RegisterDTO toDTO(Users users);
 }
 
 

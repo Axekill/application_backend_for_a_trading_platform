@@ -1,9 +1,6 @@
 package ru.skypro.homework.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,7 +22,7 @@ public class Ad {
 
     @ManyToOne
     @JoinColumn(name = "author")
-    private User user;
+    private Users users;
 
     @OneToMany
     @JoinColumn(name = "comment")

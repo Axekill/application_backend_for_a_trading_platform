@@ -2,10 +2,8 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.NewPasswordDTO;
-import ru.skypro.homework.dto.RegisterDTO;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 
 @Mapper(componentModel = "spring")
 public interface NewPasswordMapper {
@@ -14,12 +12,12 @@ public interface NewPasswordMapper {
 
     //из юзера берем пароль и передаем его в дто
     @Mapping(target = "currentPassword", source = "password")
-    NewPasswordDTO toDTO(User user);
+    NewPasswordDTO toDTO(Users users);
 
 
     //новый пароль из дто передаем в юзер
     @Mapping(target= "password", source = "newPassword")
-    User toEntity(NewPasswordDTO dto);
+    Users toEntity(NewPasswordDTO dto);
 
   /*  @Mapping(source = "user.password", target = "currentPassword")
   //  @Mapping(source = "user.newPassword", target = "newPassword")

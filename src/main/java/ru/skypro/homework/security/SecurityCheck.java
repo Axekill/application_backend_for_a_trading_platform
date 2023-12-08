@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
-import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.repostitory.UserRepository;
@@ -27,26 +27,26 @@ public class SecurityCheck {
      * Проверка ролей
      */
 
-    public boolean checkRole(User user) {
+    public boolean checkRole(Users users) {
         log.info("проверка роли");
-        return user.getRole().equals(Role.ADMIN);
+        return users.getRole().equals(Role.ADMIN);
     }
 
 
     /**
      * Проверка автора объявления
      */
-    public boolean checkAuthorAd(User user, Ad ad) {
+    public boolean checkAuthorAd(Users users, Ad ad) {
         log.info("проверка автора");
-        return ad.getUser().equals(user);
+        return ad.getUsers().equals(users);
     }
 
     /**
      * Проверка автора коментария
      */
-    public boolean checkAuthorComment(User user, Comment comment) {
+    public boolean checkAuthorComment(Users users, Comment comment) {
         log.info("проверка автора коментария");
-        return comment.getUser().equals(user);
+        return comment.getUsers().equals(users);
     }
 
     /**
@@ -79,8 +79,8 @@ public class SecurityCheck {
     /**
      * проверка авторизирован ли пользователь
      */
-    public User checkedUser(Authentication authentication) {
-        Optional<User> user = userRepository.findByUserName(authentication.getName());
+    public Users checkedUser(Authentication authentication) {
+        Optional<Users> user = userRepository.findByUserName(authentication.getName());
         if (user.isEmpty()) {
             log.info("пользователь не авторизирован");
             throw new NullPointerException();
