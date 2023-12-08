@@ -2,8 +2,7 @@
 -- changeset Andrey:1
 
 create table "users" (
-id bigint primary key,
-user_name text,
+id serial primary key,
 password varchar(64),
 first_name text,
 last_name text,
@@ -14,7 +13,7 @@ image int
 );
 
 create table ad (
-id bigint primary key ,
+id serial primary key ,
 author_id int not null,
 image_id int,
 price int not null ,
@@ -23,7 +22,7 @@ description text,
 foreign key (author_id) references "users"(id));
 
 create table comment (
-id bigint primary key ,
+id serial primary key ,
 ad_id int,
 author_id int,
 created_at timestamp,
@@ -32,8 +31,9 @@ foreign key (ad_id) references ad (id),
 foreign  key  (author_id) references  "users"(id));
 
 create table image (
-id bigint primary key ,
+id serial primary key ,
 data bytea,
 file_size bigint not null ,
 media_type text
 );
+

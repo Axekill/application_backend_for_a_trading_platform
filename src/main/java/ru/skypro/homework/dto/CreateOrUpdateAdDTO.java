@@ -10,8 +10,6 @@ import javax.validation.constraints.Size;
 @Schema(description ="Create or update ad")
 public class CreateOrUpdateAdDTO {
 
-
-
     @Size(min = 4, max = 32)
     private String  title;
 

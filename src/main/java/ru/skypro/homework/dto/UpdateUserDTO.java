@@ -8,18 +8,14 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-@Schema(description = "Update data user ")
 public class UpdateUserDTO {
-    @Schema(description = "имя ")
 
     @Size(min = 2, max = 20)
     private String firstName;
 
-    @Schema(description = "фамилия ")
     @Size(min = 2, max = 20)
     private String lastName;
 
-    @Schema(description = "номер телефона ")
     @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
     private String phone;
 }

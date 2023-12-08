@@ -47,7 +47,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
                                                 AdDTO adDTO, long id) {
-        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
         if (adRepository.findById(id).isEmpty()) {
             Ad savedAd = adRepository.save(ad);
@@ -86,7 +86,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
-        Users users = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        Users users = userRepository.findByEmail(authentication.getName()).orElseThrow();
         return adRepository.findAllAdByUsersId(users.getId()).stream()
                 .map(adMapper::adDtoToDTO)
                 .collect(Collectors.toList());
@@ -94,14 +94,14 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteAd(long id) {
-        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.deleteById(id);
     }
 
     @Override
     public void updatePhotoAd(Long id, MultipartFile imageFile,
                               Authentication authentication) throws Exception {
-        Users users = userRepository.findByUserName(authentication.getName()).orElseThrow();
+        Users users = userRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
         if (securityCheck.checkRole(users) || securityCheck.checkAuthorAd(users, ad)) {
             Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
@@ -124,7 +124,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
                                                           long adId, long commentId) {
-        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         adRepository.findById(adId).orElseThrow();
 
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
@@ -141,7 +141,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteComment(long adId, long commentId) {
-        userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         commentRepository.deleteCommentByIdAndByCommentId(adId, commentId);
     }
 
