@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ import java.io.IOException;
 @RequestMapping("/user")
 public class UsersController {
     private final UserService userService;
+    private final ImageService imageService;
+
     @Operation(
             summary = "Смена пароля",
             responses = {
@@ -108,5 +111,12 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/image/{id}")
+    @Operation(summary = "Получение изображения пользователя", responses = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+        return ResponseEntity.ok(imageService.getImage(id));
+    }
 
 }
