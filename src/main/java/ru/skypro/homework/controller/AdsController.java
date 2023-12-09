@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.ImageService;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,6 +28,7 @@ import java.util.List;
 public class AdsController {
 
     private final AdsService adsService;
+    private final ImageService imageService;
 
     @Operation(
             summary = "Обновление информации об объявлении",
@@ -205,12 +208,27 @@ public class AdsController {
                     )
             }
     )
-    @PatchMapping("{id}/image")
+    @PatchMapping(value = "{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
                                               Authentication authentication,
                                               @RequestParam MultipartFile image) throws Exception {
         adsService.updatePhotoAd(id, image, authentication);
         return ResponseEntity.ok().build();
+    }
+
+
+    @Operation(summary = "getAdsImage", description = "Запрос на получение картинки объявления",
+            tags = {"Объявления"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
+                    @ApiResponse(responseCode = "404", description = "Not found")
+            })
+    @GetMapping(value = "/image/{imageId}")
+    public ResponseEntity<byte[]> getAdsImage(@PathVariable Long imageId) throws IOException {
+        byte[] image = imageService.getImage(imageId);
+        return ResponseEntity.ok(image);
     }
 
     //Коментарии
