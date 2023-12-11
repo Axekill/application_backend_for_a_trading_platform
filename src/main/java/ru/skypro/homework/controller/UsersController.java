@@ -43,7 +43,7 @@ public class UsersController {
             }
     )
     @PostMapping("/set_password")
-    public ResponseEntity setPassword(@RequestBody NewPasswordDTO newPasswordDto,
+    public ResponseEntity<?> setPassword(@RequestBody NewPasswordDTO newPasswordDto,
                                       Authentication authentication) throws Exception {
         userService.setPassword(newPasswordDto, authentication);
         return ResponseEntity.ok().build();
