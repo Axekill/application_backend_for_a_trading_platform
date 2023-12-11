@@ -37,14 +37,12 @@ public class UserServiceImpl implements UserService {
     private UpdateUserMapper updateUserMapper;
     private ImageService imageService;
 
-    public Users findUser(Authentication authentication) {
-        return repository.findByEmail(authentication.getName()).orElseThrow();
-    }
 
     @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication) {
         log.info("Изменение данных авторизированного пользователя");
-        Users users = findUser(authentication);
+        Users users = repository.findByEmail(authentication.getName()).orElseThrow();
+        updateUserMapper.toEntity(updateUserDTO);
         users.setFirstName(updateUserDTO.getFirstName());
         users.setLastName(updateUserDTO.getLastName());
         users.setPhone(updateUserDTO.getPhone());
@@ -66,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserInfo(Authentication authentication) {
-        Users users = findUser(authentication);
+        Users users = repository.findByEmail(authentication.getName()).orElseThrow();
         return userMapper.toDTO(users);
 
     }

@@ -13,12 +13,13 @@ public interface CommentMapper {
     @Mapping(source = "users.id", target = "authorId")
     @Mapping(source = "users.image", target = "authorImage")
     @Mapping(source = "users.firstName", target = "authorFirstName")
+    @Mapping(source = "comment.id",target = "id")
     CommentDTO toDTO(Comment comment,Users users);
 
 
-    @Mapping(target = "users.id", source = "dto.authorId")
-    @Mapping(target = "users.image", source = "dto.authorImage")
-    @Mapping(target = "users.firstName", source = "dto.authorFirstName")
+    @Mapping(target = "users.id", source = "authorId")
+    @Mapping(target = "users.image", source = "authorImage")
+    @Mapping(target = "users.firstName", source = "authorFirstName")
     Comment toEntity(CommentDTO dto);
 
     default String image(Image image) {
