@@ -29,6 +29,34 @@ public class AdsController {
     private final AdsService adsService;
     private final ImageService imageService;
 
+
+    //создаем объявление
+    @Operation(
+            summary = "Добавление объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdDTO.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = " Unauthorized"
+                    )
+            }
+    )
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdDTO> createAd(@RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                          @RequestPart("image") @Valid MultipartFile image) {
+        return ResponseEntity.ok(adsService.createAd(createOrUpdateAdDTO, image));
+    }
+
+    // update Ad
     @Operation(
             summary = "Обновление информации об объявлении",
             responses = {
@@ -38,7 +66,7 @@ public class AdsController {
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            schema = @Schema(implementation = AdsDTO.class)
+                                            schema = @Schema(implementation = AdDTO.class)
                                     )
                             }
                     ),
@@ -56,14 +84,11 @@ public class AdsController {
                     )
             }
     )
-    //создаем или обновляем объявление
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    @PatchMapping("{id}")
-    public ResponseEntity<CreateOrUpdateAdDTO> createOrUpdateAd(@PathVariable Long id,
-                                                                @RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                                                @RequestBody AdDTO adDTO,
-                                                                @RequestPart("image") @Valid MultipartFile image) {
-        return ResponseEntity.ok(adsService.createOrUpdateAd(createOrUpdateAdDTO, adDTO, id, image));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdDTO> updateAd(@PathVariable long id,
+                                          @RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                          Authentication authentication) {
+        return ResponseEntity.ok(adsService.updateAd(id, createOrUpdateAdDTO, authentication));
     }
 
     @Operation(
@@ -142,8 +167,8 @@ public class AdsController {
     )
     // удалить объявление
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable Long id,Authentication authentication) {
-        adsService.deleteAd(id,authentication);
+    public ResponseEntity<?> deleteAd(@PathVariable Long id, Authentication authentication) {
+        adsService.deleteAd(id, authentication);
         return ResponseEntity.ok().build();
     }
 
@@ -287,13 +312,20 @@ public class AdsController {
     )
 
     @PostMapping("/{adId}/comments")
-    @PatchMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity<CreateOrUpdateCommentDTO> addComment(@PathVariable Long adId,
-                                                               @PathVariable Long commentId,
-                                                               @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO
-    ) {
-        return ResponseEntity.ok(adsService.createOrUpdateComment(createOrUpdateCommentDTO, adId, commentId));
+    public ResponseEntity<CommentDTO> addComment(@PathVariable Long adId,
+                                                 @RequestBody @Valid CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                 Authentication authentication) {
+        return ResponseEntity.ok(adsService.createComment(createOrUpdateCommentDTO, adId, authentication));
     }
+
+    @PatchMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<CreateOrUpdateCommentDTO> updateComment(@PathVariable long adId,
+                                                                  @PathVariable long commentId,
+                                                                  @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                                  Authentication authentication) {
+        return ResponseEntity.ok(adsService.updateComment(createOrUpdateCommentDTO, adId, commentId, authentication));
+    }
+
 
     @Operation(
             summary = "Удаление комментария",

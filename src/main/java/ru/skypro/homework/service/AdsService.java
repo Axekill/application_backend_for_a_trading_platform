@@ -10,8 +10,12 @@ import java.util.List;
 public interface AdsService {
 
     //ADS
-    CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                         AdDTO adDTO, long id, MultipartFile image);
+
+    AdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                   MultipartFile image);
+
+    AdDTO updateAd(long id, CreateOrUpdateAdDTO updateAdDTO,
+                   Authentication authentication);
 
     AdsDTO getAllAds();
 
@@ -23,13 +27,16 @@ public interface AdsService {
 
     void updatePhotoAd(Long id, MultipartFile imageFile,
                        Authentication authentication) throws Exception;
-
     //Comments
+
     Collection<CommentDTO> getCommentsForAd(long id);
 
-    CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
+    CommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                             long id, Authentication authentication);
+
+    CreateOrUpdateCommentDTO updateComment(CreateOrUpdateCommentDTO updateCommentDTO, long adId,
+                                           long commentId, Authentication authentication);
 
     void deleteComment(long adId, long commentId);
-
 
 }

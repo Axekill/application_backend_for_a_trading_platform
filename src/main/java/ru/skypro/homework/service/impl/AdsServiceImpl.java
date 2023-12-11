@@ -24,6 +24,7 @@ import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,37 +49,39 @@ public class AdsServiceImpl implements AdsService {
 
 
     @Override
-    public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                                AdDTO adDTO, long id, MultipartFile image) {
-        // userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+    public AdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                          MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        Users user = userRepository.findByEmail(auth.getName()).orElseThrow();
         Users currentUser = userRepository.findByEmail(username).orElseThrow();
-
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
-        if (adRepository.findById(id).isEmpty()) {
-            Image imageAd = null;
-            try {
-                imageAd = new Image();
-                imageAd.setData(image.getBytes());
-                imageAd.setFileSize(image.getSize());
-                imageRepository.save(imageAd);
-            } catch (IOException e) {
-                log.error("ошибка при загрузки картинки", e);
-            }
-            ad.setImage(imageAd);
-            ad.setUsers(currentUser);
-            return createOrUpdateAdMapper.toDTO(adRepository.save(ad));
-        } else if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
-            ad.setId(ad.getId());
+        Image imageAd = null;
+        try {
+            imageAd = new Image();
+            imageAd.setData(image.getBytes());
+            imageAd.setFileSize(image.getSize());
+            imageRepository.save(imageAd);
+        } catch (IOException e) {
+            log.error("ошибка при загрузки картинки", e);
+        }
+        ad.setImage(imageAd);
+        ad.setUsers(currentUser);
+        return adMapper.toAdDTO(adRepository.save(ad));
+    }
+
+    @Override
+    public AdDTO updateAd(long id, CreateOrUpdateAdDTO updateAdDTO,
+                          Authentication authentication) {
+        Users user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Ad updateAd = createOrUpdateAdMapper.toEntity(updateAdDTO);
+        Ad ad = adRepository.findById(id).orElseThrow();
+        if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
             ad.setDescription(ad.getDescription());
+            adRepository.save(ad);
         }
-        return createOrUpdateAdMapper.toDTO(adRepository.save(ad));
-
-
+        return adMapper.toAdDTO(ad);
     }
 
     @Override
@@ -142,27 +145,38 @@ public class AdsServiceImpl implements AdsService {
     public Collection<CommentDTO> getCommentsForAd(long id) {
 
         return commentRepository.getAllCommentsByAdId(id).stream()
-                .map(commentMapper::toDTO)
+                .map((Comment comment) -> commentMapper.toDTO(comment,comment.getUsers()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
-                                                          long adId, long commentId) {
-        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        adRepository.findById(adId).orElseThrow();
-
+    public CommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                    long id, Authentication authentication) {
+        Users user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Ad ad = adRepository.findById(id).orElseThrow();
+        log.info("вызман метод создания коментария к объявлению");
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
-        if (commentRepository.findById(commentId).isEmpty()) {
-            Comment saveCom = commentRepository.save(comment);
-            return createOrUpdateCommentMapper.toDTO(saveCom);
-        } else {
-            comment.setTextComment(comment.getTextComment());
-            Comment updateComment = commentRepository.save(comment);
-            return createOrUpdateCommentMapper.toDTO(updateComment);
-        }
+        Comment newComment = new Comment();
+        newComment.setAd(ad);
+        newComment.setUsers(user);
+        newComment.setTextComment(createOrUpdateCommentDTO.getText());
+        newComment.setCreatedAt(LocalDateTime.now());
+        commentRepository.save(newComment);
+        return commentMapper.toDTO(comment, user);
     }
 
+    @Override
+    public CreateOrUpdateCommentDTO updateComment(CreateOrUpdateCommentDTO updateCommentDTO, long adId,
+                                                  long commentId, Authentication authentication) {
+        Comment comment = commentRepository.findByAdIdAndId(adId, commentId).orElseThrow();
+        Users user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        if (securityCheck.checkRole(user) || securityCheck.checkAuthorComment(user, comment)) {
+            comment.setTextComment(updateCommentDTO.getText());
+        } else {
+            throw new RuntimeException();
+        }
+        return createOrUpdateCommentMapper.toDTO(comment);
+    }
 
     @Override
     public void deleteComment(long adId, long commentId) {
