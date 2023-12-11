@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class AdsServiceImpl implements AdsService {
     @Autowired
     private final AdRepository adRepository;
@@ -46,20 +49,35 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                                AdDTO adDTO, long id) {
-        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+                                                AdDTO adDTO, long id, MultipartFile image) {
+        // userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Users user = userRepository.findByEmail(auth.getName()).orElseThrow();
+        Users currentUser = userRepository.findByEmail(username).orElseThrow();
+
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
         if (adRepository.findById(id).isEmpty()) {
-            Ad savedAd = adRepository.save(ad);
-            return createOrUpdateAdMapper.toDTO(savedAd);
-        } else {
+            Image imageAd = null;
+            try {
+                imageAd = new Image();
+                imageAd.setData(image.getBytes());
+                imageAd.setFileSize(image.getSize());
+                imageRepository.save(imageAd);
+            } catch (IOException e) {
+                log.error("ошибка при загрузки картинки", e);
+            }
+            ad.setImage(imageAd);
+            ad.setUsers(currentUser);
+            return createOrUpdateAdMapper.toDTO(adRepository.save(ad));
+        } else if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
             ad.setId(ad.getId());
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
             ad.setDescription(ad.getDescription());
-            Ad updateAd = adRepository.save(ad);
-            return createOrUpdateAdMapper.toDTO(updateAd);
         }
+        return createOrUpdateAdMapper.toDTO(adRepository.save(ad));
+
 
     }
 
@@ -68,7 +86,7 @@ public class AdsServiceImpl implements AdsService {
         List<AdDTO> result = new ArrayList<>();
         var find = adRepository.findAll();
         for (Ad ad : find) {
-            result.add(adMapper.adDtoToDTO(ad));
+            result.add(adMapper.toAdDTO(ad));
         }
         AdsDTO adsDTO = new AdsDTO();
         adsDTO.setResult(result);
@@ -80,7 +98,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdDTO findByIdAd(long id) {
         return adRepository.findById(id)
-                .map(adMapper::adDtoToDTO)
+                .map(adMapper::toAdDTO)
                 .orElse(null);
     }
 
@@ -88,13 +106,20 @@ public class AdsServiceImpl implements AdsService {
     public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
         Users users = userRepository.findByEmail(authentication.getName()).orElseThrow();
         return adRepository.findAllAdByUsersId(users.getId()).stream()
-                .map(adMapper::adDtoToDTO)
+                .map(adMapper::toAdDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteAd(long id) {
-        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+    public void deleteAd(long id, Authentication authentication) {
+        Users user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Ad ad = adRepository.findById(id).orElseThrow();
+        if ((securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad))) {
+            commentRepository.deleteById(id);
+            if (ad.getImage() != null) {
+                imageRepository.deleteById(ad.getImage().getId());
+            }
+        }
         adRepository.deleteById(id);
     }
 

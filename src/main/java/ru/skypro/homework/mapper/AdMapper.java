@@ -13,9 +13,8 @@ public interface AdMapper {
 
     @Mapping(source = "id", target = "author")
     AdDTO toDTO(Users users);
-
-    AdDTO adDtoToDTO(Ad ad);
-
+    @Mapping(target = "author", source = "users.id")
+    AdDTO toAdDTO(Ad ad);
 
     @Mapping(source = "author", target = "id")
     Users toEntity(AdDTO dto);

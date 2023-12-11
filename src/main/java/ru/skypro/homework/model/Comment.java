@@ -17,10 +17,10 @@ public class Comment {
     private String textComment;
 
     @ManyToOne
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     private Users users;
 
     @ManyToOne
-    @JoinColumn(name = "ad")
+    @JoinColumn(name = "ad_id")
     private Ad ad;
 }

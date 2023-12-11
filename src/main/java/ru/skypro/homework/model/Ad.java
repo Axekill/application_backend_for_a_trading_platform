@@ -17,15 +17,15 @@ public class Ad {
     private String description;
 
     @OneToOne
-    @JoinColumn(name = "image")
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @ManyToOne
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     private Users users;
 
     @OneToMany
-    @JoinColumn(name = "comment")
+    @JoinColumn(name = "comment_id")
     private List<Comment> comments;
 
 

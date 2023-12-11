@@ -9,14 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.ImageService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -58,12 +57,13 @@ public class AdsController {
             }
     )
     //создаем или обновляем объявление
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @PatchMapping("{id}")
     public ResponseEntity<CreateOrUpdateAdDTO> createOrUpdateAd(@PathVariable Long id,
                                                                 @RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                                                @RequestBody AdDTO adDTO) {
-        return ResponseEntity.ok(adsService.createOrUpdateAd(createOrUpdateAdDTO, adDTO, id));
+                                                                @RequestBody AdDTO adDTO,
+                                                                @RequestPart("image") @Valid MultipartFile image) {
+        return ResponseEntity.ok(adsService.createOrUpdateAd(createOrUpdateAdDTO, adDTO, id, image));
     }
 
     @Operation(
@@ -142,8 +142,8 @@ public class AdsController {
     )
     // удалить объявление
     @DeleteMapping("{id}")
-    public ResponseEntity deleteAd(@PathVariable Long id) {
-        adsService.deleteAd(id);
+    public ResponseEntity<?> deleteAd(@PathVariable Long id,Authentication authentication) {
+        adsService.deleteAd(id,authentication);
         return ResponseEntity.ok().build();
     }
 
@@ -164,9 +164,9 @@ public class AdsController {
             }
     )
     @GetMapping("/me")
-    public ResponseEntity<AdsDTO> getAdAuthorizedUser(Authentication authentication) {
-        List<AdDTO> adDTOList = adsService.getAdInfoAuthorizedUser(authentication);
-        return ResponseEntity.ok((AdsDTO) adDTOList);
+    public ResponseEntity<List<AdDTO>> getAdAuthorizedUser(Authentication authentication) {
+        List<AdDTO> ads = adsService.getAdInfoAuthorizedUser(authentication);
+        return ResponseEntity.ok(ads);
     }
 
     // обновить картинрку объявления
@@ -208,7 +208,7 @@ public class AdsController {
                     )
             }
     )
-    @PatchMapping(value = "{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
                                               Authentication authentication,
                                               @RequestParam MultipartFile image) throws Exception {

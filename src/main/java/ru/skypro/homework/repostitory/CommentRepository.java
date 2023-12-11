@@ -11,5 +11,8 @@ public interface CommentRepository extends CrudRepository<Comment,Long> {
     @Query(value = "delete from Comment where id=:commentId and ad=:adId",nativeQuery = true)
     void deleteCommentByIdAndByCommentId(long adId, long commentId);
 
+
+    void deleteByAdId(Long id);
+
     Collection<Comment> getAllCommentsByAdId(long id);
 }
