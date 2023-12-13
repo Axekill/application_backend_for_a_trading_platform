@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
-import ru.skypro.homework.dto.UpdateUserDTO;
+import ru.skypro.homework.dto.UpdateUsersDTO;
 import ru.skypro.homework.dto.UsersDTO;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UsersService;
@@ -78,9 +78,9 @@ public class UsersController {
                     ),
             }
     )
-    @PatchMapping("/update")
-    public ResponseEntity<UpdateUserDTO> updateUser(@RequestBody UpdateUserDTO updateUserDto, Authentication authentication) {
-        return ResponseEntity.ok(usersService.updateUser(updateUserDto, authentication));
+    @PatchMapping("/me")
+    public ResponseEntity<UpdateUsersDTO> updateUser(@RequestBody UpdateUsersDTO updateUsersDto, Authentication authentication) {
+        return ResponseEntity.ok(usersService.updateUser(updateUsersDto, authentication));
     }
 
     @Operation(

@@ -9,9 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
-import ru.skypro.homework.dto.UpdateUserDTO;
+import ru.skypro.homework.dto.UpdateUsersDTO;
 import ru.skypro.homework.dto.UsersDTO;
-import ru.skypro.homework.mapper.UpdateUserMapper;
+import ru.skypro.homework.mapper.UpdateUsersMapper;
 import ru.skypro.homework.mapper.UsersMapper;
 import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.UsersRepository;
@@ -33,20 +33,20 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository repository;
     private final PasswordEncoder encoder;
     private UsersMapper usersMapper;
-    private UpdateUserMapper updateUserMapper;
+    private UpdateUsersMapper updateUsersMapper;
     private ImageService imageService;
 
 
     @Override
-    public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO, Authentication authentication) {
+    public UpdateUsersDTO updateUser(UpdateUsersDTO updateUsersDTO, Authentication authentication) {
         log.info("Изменение данных авторизированного пользователя");
         Users users = repository.findByEmail(authentication.getName()).orElseThrow();
-        updateUserMapper.toEntity(updateUserDTO);
-        users.setFirstName(updateUserDTO.getFirstName());
-        users.setLastName(updateUserDTO.getLastName());
-        users.setPhone(updateUserDTO.getPhone());
+        updateUsersMapper.toEntity(updateUsersDTO);
+        users.setFirstName(updateUsersDTO.getFirstName());
+        users.setLastName(updateUsersDTO.getLastName());
+        users.setPhone(updateUsersDTO.getPhone());
         repository.save(users);
-        return updateUserMapper.toDTO(users);
+        return updateUsersMapper.toDTO(users);
     }
 
     @Override
