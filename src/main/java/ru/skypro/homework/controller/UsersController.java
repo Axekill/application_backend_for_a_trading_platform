@@ -5,18 +5,16 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.style.ToStringStyler;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
-import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.dto.UsersDTO;
 import ru.skypro.homework.service.ImageService;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
 
@@ -24,9 +22,9 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(value = "http://localhost:3000")
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UsersController {
-    private final UserService userService;
+    private final UsersService usersService;
     private final ImageService imageService;
 
     @Operation(
@@ -45,7 +43,7 @@ public class UsersController {
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDTO newPasswordDto,
                                       Authentication authentication) throws Exception {
-        userService.setPassword(newPasswordDto, authentication);
+        usersService.setPassword(newPasswordDto, authentication);
         return ResponseEntity.ok().build();
     }
 
@@ -63,8 +61,8 @@ public class UsersController {
             }
     )
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> getUser(Authentication authentication) {
-        return ResponseEntity.ok(userService.getUserInfo(authentication));
+    public ResponseEntity<UsersDTO> getUser(Authentication authentication) {
+        return ResponseEntity.ok(usersService.getUserInfo(authentication));
     }
 
     @Operation(
@@ -82,7 +80,7 @@ public class UsersController {
     )
     @PatchMapping("/update")
     public ResponseEntity<UpdateUserDTO> updateUser(@RequestBody UpdateUserDTO updateUserDto, Authentication authentication) {
-        return ResponseEntity.ok(userService.updateUser(updateUserDto, authentication));
+        return ResponseEntity.ok(usersService.updateUser(updateUserDto, authentication));
     }
 
     @Operation(
@@ -104,10 +102,10 @@ public class UsersController {
             }
     )
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserDTO> updateUserImage(@RequestPart("image") MultipartFile image,
-                                                   Authentication authentication) throws IOException {
+    public ResponseEntity<UsersDTO> updateUserImage(@RequestPart("image") MultipartFile image,
+                                                    Authentication authentication) throws IOException {
 
-        userService.setPhoto(image, authentication);
+        usersService.setPhoto(image, authentication);
         return ResponseEntity.ok().build();
     }
 

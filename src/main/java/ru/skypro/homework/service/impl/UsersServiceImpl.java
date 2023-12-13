@@ -10,30 +10,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDTO;
 import ru.skypro.homework.dto.UpdateUserDTO;
-import ru.skypro.homework.dto.UserDTO;
-import ru.skypro.homework.mapper.NewPasswordMapper;
+import ru.skypro.homework.dto.UsersDTO;
 import ru.skypro.homework.mapper.UpdateUserMapper;
-import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.mapper.UsersMapper;
 import ru.skypro.homework.model.Users;
-import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.repostitory.UsersRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.security.SecurityUserService;
 import ru.skypro.homework.service.ImageService;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
 
 @Service
 @AllArgsConstructor
 @Log
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private final SecurityCheck securityCheck;
     private final SecurityUserService securityUserService;
-    private final UserRepository repository;
+    private final UsersRepository repository;
     private final PasswordEncoder encoder;
-    private UserMapper userMapper;
+    private UsersMapper usersMapper;
     private UpdateUserMapper updateUserMapper;
     private ImageService imageService;
 
@@ -64,9 +63,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserInfo(Authentication authentication) {
+    public UsersDTO getUserInfo(Authentication authentication) {
         Users users = repository.findByEmail(authentication.getName()).orElseThrow();
-        return userMapper.toDTO(users);
+        return usersMapper.toDTO(users);
 
     }
 

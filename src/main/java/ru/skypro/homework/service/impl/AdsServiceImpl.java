@@ -19,7 +19,7 @@ import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
 import ru.skypro.homework.repostitory.ImageRepository;
-import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.repostitory.UsersRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
 
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class AdsServiceImpl implements AdsService {
     @Autowired
     private final AdRepository adRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final CommentRepository commentRepository;
     private final AdMapper adMapper;
     private final CreateOrUpdateAdMapper createOrUpdateAdMapper;
@@ -53,7 +53,7 @@ public class AdsServiceImpl implements AdsService {
                           MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        Users currentUser = userRepository.findByEmail(username).orElseThrow();
+        Users currentUser = usersRepository.findByEmail(username).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
         Image imageAd = null;
         try {
@@ -72,7 +72,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdDTO updateAd(long id, CreateOrUpdateAdDTO updateAdDTO,
                           Authentication authentication) {
-        Users user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad updateAd = createOrUpdateAdMapper.toEntity(updateAdDTO);
         Ad ad = adRepository.findById(id).orElseThrow();
         if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
@@ -107,7 +107,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
-        Users users = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Users users = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         return adRepository.findAllAdByUsersId(users.getId()).stream()
                 .map(adMapper::toAdDTO)
                 .collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteAd(long id, Authentication authentication) {
-        Users user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
         if ((securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad))) {
             commentRepository.deleteById(id);
@@ -129,7 +129,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public void updatePhotoAd(Long id, MultipartFile imageFile,
                               Authentication authentication) throws Exception {
-        Users users = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        Users users = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
         if (securityCheck.checkRole(users) || securityCheck.checkAuthorAd(users, ad)) {
             Image image = imageRepository.findById(ad.getImage().getId()).orElseThrow();
@@ -152,7 +152,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public CommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
                                     long id, Authentication authentication) {
-        Users user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Users user = usersRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         Ad ad = adRepository.findById(id).orElseThrow();
         log.info("вызман метод создания коментария к объявлению");
         Comment comment = createOrUpdateCommentMapper.toEntity(createOrUpdateCommentDTO);
@@ -169,7 +169,7 @@ public class AdsServiceImpl implements AdsService {
     public CreateOrUpdateCommentDTO updateComment(CreateOrUpdateCommentDTO updateCommentDTO, long adId,
                                                   long commentId, Authentication authentication) {
         Comment comment = commentRepository.findByAdIdAndId(adId, commentId).orElseThrow();
-        Users user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Users user = usersRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         if (securityCheck.checkRole(user) || securityCheck.checkAuthorComment(user, comment)) {
             comment.setTextComment(updateCommentDTO.getText());
         } else {
@@ -180,7 +180,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void deleteComment(long adId, long commentId) {
-        userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        usersRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         commentRepository.deleteCommentByIdAndByCommentId(adId, commentId);
     }
 

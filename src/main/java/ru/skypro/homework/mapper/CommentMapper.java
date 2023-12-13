@@ -7,7 +7,7 @@ import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.Users;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UsersMapper.class})
 public interface CommentMapper {
 
     @Mapping(source = "users.id", target = "authorId")

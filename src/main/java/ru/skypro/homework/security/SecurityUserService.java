@@ -4,19 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.RegisterDTO;
-import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.mapper.RegisterMapper;
 import ru.skypro.homework.model.Users;
-import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.repostitory.UsersRepository;
 
 @Service
 @RequiredArgsConstructor
 public class SecurityUserService implements UserDetailsService {
 
-    private final UserRepository repository;
+    private final UsersRepository repository;
     private final RegisterMapper mapper;
 
 
