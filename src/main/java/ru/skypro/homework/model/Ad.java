@@ -16,16 +16,14 @@ public class Ad {
     private int price;
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "image_id")
+    @OneToOne(mappedBy = "ad")
     private Image image;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Users users;
 
-    @OneToMany
-    @JoinColumn(name = "comment_id")
+    @OneToMany(mappedBy = "ad")
     private List<Comment> comments;
 
 

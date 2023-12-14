@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.service.ImageService;
@@ -19,16 +20,27 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image uploadImage(MultipartFile multipartFile) throws IOException {
-        Image image =new Image();
+        Image image = new Image();
         image.setData(multipartFile.getBytes());
         image.setFileSize(multipartFile.getSize());
         image.setMediaType(multipartFile.getContentType());
-        return imageRepository.save(image) ;
+        return imageRepository.save(image);
     }
 
     @Override
     public byte[] getImage(Long id) {
-        Image image =imageRepository.findById(id).orElseThrow();
+        Image image = imageRepository.findById(id).orElseThrow();
         return image.getData();
     }
+
+    @Override
+    public Image createImage(MultipartFile imageFile, Ad ad) throws IOException {
+        Image imageAd = new Image();
+        imageAd.setData(imageFile.getBytes());
+        imageAd.setFileSize(imageFile.getSize());
+        imageAd.setMediaType(imageFile.getContentType());
+        imageAd.setAd(ad);
+        return imageRepository.save(imageAd);
+    }
+
 }

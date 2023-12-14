@@ -12,7 +12,7 @@ import ru.skypro.homework.model.Image;
 public class AdDTO {
     private Long id;
     private Long author;
-    private Image image;
+    private String image;
     private int price;
     private String title;
     private String description;

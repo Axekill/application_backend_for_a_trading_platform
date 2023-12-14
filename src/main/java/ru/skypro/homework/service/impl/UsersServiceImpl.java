@@ -2,6 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,9 @@ import ru.skypro.homework.dto.UpdateUsersDTO;
 import ru.skypro.homework.dto.UsersDTO;
 import ru.skypro.homework.mapper.UpdateUsersMapper;
 import ru.skypro.homework.mapper.UsersMapper;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.Users;
+import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.repostitory.UsersRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.security.SecurityUserService;
@@ -24,7 +27,7 @@ import java.io.IOException;
 
 @Service
 @AllArgsConstructor
-@Log
+@Slf4j
 public class UsersServiceImpl implements UsersService {
 
     @Autowired
@@ -35,6 +38,7 @@ public class UsersServiceImpl implements UsersService {
     private UsersMapper usersMapper;
     private UpdateUsersMapper updateUsersMapper;
     private ImageService imageService;
+    private ImageRepository imageRepository;
 
 
     @Override
@@ -73,8 +77,20 @@ public class UsersServiceImpl implements UsersService {
     public void setPhoto(MultipartFile image, Authentication authentication) throws IOException {
         Users users = securityCheck.checkedUser(authentication);
         users.setImage(imageService.uploadImage(image));
-        repository.save(users);
+
+        Image avatar = imageRepository.findByUsersId(users.getId()).orElse(new Image());
+
+        try {
+            avatar.setData(image.getBytes());
+        } catch (IOException e) {
+            log.error("File '{}' has some problems and cannot be read.", image.getOriginalFilename());
+            throw new RuntimeException("Problems with uploaded image");
+        }
+        avatar.setUsers(users);
+        imageRepository.save(avatar);
     }
 
-
 }
+
+
+

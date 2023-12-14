@@ -113,7 +113,7 @@ public class UsersController {
     @Operation(summary = "Получение изображения пользователя", responses = {
             @ApiResponse(responseCode = "200", description = "OK")
     })
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
         return ResponseEntity.ok(imageService.getImage(id));
     }
 

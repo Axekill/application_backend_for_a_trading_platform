@@ -22,7 +22,9 @@ import ru.skypro.homework.repostitory.ImageRepository;
 import ru.skypro.homework.repostitory.UsersRepository;
 import ru.skypro.homework.security.SecurityCheck;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.ImageService;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,37 +46,38 @@ public class AdsServiceImpl implements AdsService {
     private final ImageRepository imageRepository;
     private final SecurityCheck securityCheck;
     private final CommentMapper commentMapper;
+    private final ImageService imageService;
 
     //Ads
-
-
     @Override
+    @Transactional
     public AdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                          MultipartFile image) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Users currentUser = usersRepository.findByEmail(username).orElseThrow();
+                          MultipartFile image,
+                          Authentication authentication) throws IOException {
+        Users currentUser = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
-        Image imageAd = null;
-        try {
+        ad.setUsers(currentUser);
+        Ad saveAd = adRepository.save(ad);
+
+        Image imageAd = imageService.createImage(image, saveAd);
+        /*try {
             imageAd = new Image();
             imageAd.setData(image.getBytes());
             imageAd.setFileSize(image.getSize());
             imageRepository.save(imageAd);
         } catch (IOException e) {
             log.error("ошибка при загрузки картинки", e);
-        }
-        ad.setImage(imageAd);
-        ad.setUsers(currentUser);
-        return adMapper.toAdDTO(adRepository.save(ad));
+        }*/
+        saveAd.setImage(imageAd);
+        return adMapper.toAdDTO(adRepository.save(saveAd));
     }
 
     @Override
     public AdDTO updateAd(long id, CreateOrUpdateAdDTO updateAdDTO,
                           Authentication authentication) {
+        Ad ad = adRepository.findById(id).orElseThrow();
         Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow();
         Ad updateAd = createOrUpdateAdMapper.toEntity(updateAdDTO);
-        Ad ad = adRepository.findById(id).orElseThrow();
         if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
@@ -86,7 +89,9 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDTO getAllAds() {
-        List<AdDTO> result = new ArrayList<>();
+        List<Ad> adList = (List<Ad>) adRepository.findAll();
+        return adMapper.adsListToAdsDTO(adList.size(), adList);
+       /* List<AdDTO> result = new ArrayList<>();
         var find = adRepository.findAll();
         for (Ad ad : find) {
             result.add(adMapper.toAdDTO(ad));
@@ -95,7 +100,7 @@ public class AdsServiceImpl implements AdsService {
         adsDTO.setResult(result);
         adsDTO.setCount(result.size());
 
-        return adsDTO;
+        return adsDTO;*/
     }
 
     @Override
@@ -145,7 +150,7 @@ public class AdsServiceImpl implements AdsService {
     public Collection<CommentDTO> getCommentsForAd(long id) {
 
         return commentRepository.getAllCommentsByAdId(id).stream()
-                .map((Comment comment) -> commentMapper.toDTO(comment,comment.getUsers()))
+                .map((Comment comment) -> commentMapper.toDTO(comment, comment.getUsers()))
                 .collect(Collectors.toList());
     }
 

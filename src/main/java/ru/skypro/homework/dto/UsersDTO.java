@@ -20,5 +20,5 @@ public class UsersDTO {
     @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
     private String phone;
     private Role role;
-    private Image image;
+    private String image;
 }

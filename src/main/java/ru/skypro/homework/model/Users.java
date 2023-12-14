@@ -23,8 +23,7 @@ public class Users {
     private String email;
     private String phone;
 
-    @OneToOne
-    @JoinColumn(name = "image")
+    @OneToOne(mappedBy = "users")
     private Image image;
 
     private String password;

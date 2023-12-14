@@ -20,8 +20,13 @@ public class Image {
     @Column(name = "file_size")
     private Long fileSize;
 
-    @Column(name="media_type")
-    private  String mediaType;
+    @Column(name = "media_type")
+    private String mediaType;
 
+    @OneToOne
+    private Users users;
+
+    @OneToOne
+    private Ad ad;
 
 }
