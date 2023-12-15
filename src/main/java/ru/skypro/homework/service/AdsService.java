@@ -6,7 +6,6 @@ import ru.skypro.homework.dto.*;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 public interface AdsService {
 
@@ -23,9 +22,9 @@ public interface AdsService {
 
     AdsDTO getAllAds();
 
-    AdDTO findByIdAd(long id);
+    ExtendedAdDTO findByIdAd(long id);
 
-    List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication);
+    AdsDTO getAdInfoAuthorizedUser(String email);
 
     void deleteAd(long id, Authentication authentication);
 

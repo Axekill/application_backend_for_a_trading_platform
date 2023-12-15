@@ -8,10 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.mapper.AdMapper;
-import ru.skypro.homework.mapper.CommentMapper;
-import ru.skypro.homework.mapper.CreateOrUpdateAdMapper;
-import ru.skypro.homework.mapper.CreateOrUpdateCommentMapper;
+import ru.skypro.homework.mapper.*;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.Image;
@@ -27,7 +24,6 @@ import ru.skypro.homework.service.ImageService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +43,7 @@ public class AdsServiceImpl implements AdsService {
     private final SecurityCheck securityCheck;
     private final CommentMapper commentMapper;
     private final ImageService imageService;
+ //   private final ExtendedAdMapper extendedAdMapper;
 
     //Ads
     @Override
@@ -104,18 +101,18 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public AdDTO findByIdAd(long id) {
-        return adRepository.findById(id)
-                .map(adMapper::toAdDTO)
-                .orElse(null);
+    public ExtendedAdDTO findByIdAd(long id) {
+        Ad ad = adRepository.findById(id).orElseThrow();
+        return adMapper.AdToExtendedDTO(ad);
     }
 
     @Override
-    public List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication) {
-        Users users = usersRepository.findByEmail(authentication.getName()).orElseThrow();
-        return adRepository.findAllAdByUsersId(users.getId()).stream()
+    public AdsDTO getAdInfoAuthorizedUser(String email) {
+        List<Ad> usersAdlist=adRepository.findAllAdByUsersEmail(email);
+       /* return adRepository.findAllAdByUsersId(users.getId()).stream()
                 .map(adMapper::toAdDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        return adMapper.adsListToAdsDTO(usersAdlist.size(),usersAdlist);
     }
 
     @Override

@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ads")
@@ -137,12 +138,8 @@ public class AdsController {
             }
     )
     @GetMapping("{id}")
-    public ResponseEntity<AdDTO> getByIdAd(@PathVariable Long id) {
-        AdDTO adDTO = adsService.findByIdAd(id);
-        if (adDTO == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(adDTO);
+    public ResponseEntity<ExtendedAdDTO> getByIdAd(@PathVariable Long id) {
+        return ResponseEntity.ok(adsService.findByIdAd(id));
     }
 
     @Operation(
@@ -190,9 +187,9 @@ public class AdsController {
             }
     )
     @GetMapping("/me")
-    public ResponseEntity<List<AdDTO>> getAdAuthorizedUser(Authentication authentication) {
-        List<AdDTO> ads = adsService.getAdInfoAuthorizedUser(authentication);
-        return ResponseEntity.ok(ads);
+    public ResponseEntity<AdsDTO> getAdAuthorizedUser(Authentication authentication) {
+
+        return ResponseEntity.ok( adsService.getAdInfoAuthorizedUser(authentication.getName()));
     }
 
     // обновить картинрку объявления
@@ -251,10 +248,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
                     @ApiResponse(responseCode = "404", description = "Not found")
             })
-    @GetMapping(value = "/image/{imageId}")
+    @GetMapping(value = "/image/{imageId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> getAdsImage(@PathVariable Long imageId) throws IOException {
-        byte[] image = imageService.getImage(imageId);
-        return ResponseEntity.ok(image);
+        return ResponseEntity.ok(imageService.getImage(imageId));
     }
 
     //Коментарии
