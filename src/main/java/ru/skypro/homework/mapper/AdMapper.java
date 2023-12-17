@@ -19,6 +19,7 @@ public interface AdMapper {
 //    AdDTO toDTO(Users users);
     @Mapping(source = "image", target = "image", qualifiedByName = "getAdImageLink")
     @Mapping(target = "author", source = "users.id")
+    @Mapping(source = "id", target = "pk")
     AdDTO toAdDTO(Ad ad);
 
     @Mapping(source = "size", target = "count")
@@ -30,16 +31,19 @@ public interface AdMapper {
     @Mapping(source = "users.email", target = "email")
     @Mapping(source = "users.phone", target = "phone")
     @Mapping(source = "image", target = "image", qualifiedByName = "getAdImageLink")
+    @Mapping(source = "id", target = "pk")
     ExtendedAdDTO AdToExtendedDTO(Ad ad);
 
-//    @Mapping(source = "author", target = "id")
+    //    @Mapping(source = "author", target = "id")
 //    Users toEntity(AdDTO dto);
-
-    //  Ad adToEntity(AdDTO dto);
+    @Mapping(source = "author", target = "users.id")
+    @Mapping(target = "id", source = "pk")
+    @Mapping(target = "image", ignore = true)
+    Ad adToEntity(AdDTO dto);
 
     @Named("getAdImageLink")
     default String getAdImageLink(Image image) {
-        return (image == null) ? null : "/ad/image/" + image.getId();
+        return (image == null) ? null : "/ads/image/" + image.getId();
     }
 }
 

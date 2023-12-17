@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Data
 public class ExtendedAdDTO {
-    private long id;
+    private long pk;
     private String image;
     @Size(min = 0, max = 10000000)
     private int price;

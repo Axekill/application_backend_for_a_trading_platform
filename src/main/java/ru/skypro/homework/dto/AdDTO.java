@@ -10,7 +10,7 @@ import ru.skypro.homework.model.Image;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdDTO {
-    private Long id;
+    private Long pk;
     private Long author;
     private String image;
     private int price;
