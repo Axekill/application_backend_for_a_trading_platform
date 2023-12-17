@@ -16,7 +16,7 @@ public class Ad {
     private int price;
     private String description;
 
-    @OneToOne(mappedBy = "ad")
+    @OneToOne(mappedBy = "ad",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image image;
 
     @ManyToOne

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.AdsDTO;
+import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Image;
@@ -23,7 +24,7 @@ public interface AdMapper {
     AdDTO toAdDTO(Ad ad);
 
     @Mapping(source = "size", target = "count")
-    @Mapping(source = "adList", target = "result")
+    @Mapping(source = "adList", target = "results")
     AdsDTO adsListToAdsDTO(Integer size, List<Ad> adList);
 
     @Mapping(source = "users.firstName", target = "authorFirstName")
@@ -34,11 +35,13 @@ public interface AdMapper {
     @Mapping(source = "id", target = "pk")
     ExtendedAdDTO AdToExtendedDTO(Ad ad);
 
+    Ad toEntity(CreateOrUpdateAdDTO dto);
+
     //    @Mapping(source = "author", target = "id")
 //    Users toEntity(AdDTO dto);
     @Mapping(source = "author", target = "users.id")
     @Mapping(target = "id", source = "pk")
-    @Mapping(target = "image", ignore = true)
+   @Mapping(target = "image", ignore = true)
     Ad adToEntity(AdDTO dto);
 
     @Named("getAdImageLink")

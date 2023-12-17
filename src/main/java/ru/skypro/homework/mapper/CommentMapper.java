@@ -3,9 +3,12 @@ package ru.skypro.homework.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.Users;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {UsersMapper.class})
 public interface CommentMapper {
@@ -21,6 +24,10 @@ public interface CommentMapper {
     @Mapping(target = "users.image", source = "authorImage")
     @Mapping(target = "users.firstName", source = "authorFirstName")
     Comment toEntity(CommentDTO dto);
+
+    @Mapping(source = "size", target = "count")
+    @Mapping(source = "commentList", target = "results")
+    CommentsDTO commentsListToComments(Integer size, List<Comment> commentList);
 
     default String image(Image image) {
         return String.valueOf(image.getId());

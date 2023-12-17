@@ -24,9 +24,7 @@ import ru.skypro.homework.service.ImageService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -37,7 +35,7 @@ public class AdsServiceImpl implements AdsService {
     private final UsersRepository usersRepository;
     private final CommentRepository commentRepository;
     private final AdMapper adMapper;
-    private final CreateOrUpdateAdMapper createOrUpdateAdMapper;
+   // private final CreateOrUpdateAdMapper createOrUpdateAdMapper;
     private final CreateOrUpdateCommentMapper createOrUpdateCommentMapper;
     private final ImageRepository imageRepository;
     private final SecurityCheck securityCheck;
@@ -52,7 +50,7 @@ public class AdsServiceImpl implements AdsService {
                           MultipartFile image,
                           Authentication authentication) throws IOException {
         Users currentUser = usersRepository.findByEmail(authentication.getName()).orElseThrow();
-        Ad ad = createOrUpdateAdMapper.toEntity(createOrUpdateAdDTO);
+        Ad ad = adMapper.toEntity(createOrUpdateAdDTO);
         ad.setUsers(currentUser);
         Ad saveAd = adRepository.save(ad);
 
@@ -74,7 +72,7 @@ public class AdsServiceImpl implements AdsService {
                           Authentication authentication) {
         Ad ad = adRepository.findById(id).orElseThrow();
         Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow();
-        Ad updateAd = createOrUpdateAdMapper.toEntity(updateAdDTO);
+        Ad updateAd = adMapper.toEntity(updateAdDTO);
         if (securityCheck.checkRole(user) || securityCheck.checkAuthorAd(user, ad)) {
             ad.setTitle(ad.getTitle());
             ad.setPrice(ad.getPrice());
@@ -144,11 +142,14 @@ public class AdsServiceImpl implements AdsService {
 
     //Comments
     @Override
-    public Collection<CommentDTO> getCommentsForAd(long id) {
+    public CommentsDTO getCommentsForAd(long id) {
+        Ad adById = adRepository.findById(id).orElseThrow();
+        List<Comment> comments = adById.getComments();
+        return commentMapper.commentsListToComments(comments.size(), comments);
 
-        return commentRepository.getAllCommentsByAdId(id).stream()
+       /* return commentRepository.getAllCommentsByAdId(id).stream()
                 .map((Comment comment) -> commentMapper.toDTO(comment, comment.getUsers()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
     }
 
     @Override

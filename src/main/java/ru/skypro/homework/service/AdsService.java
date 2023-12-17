@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 
 import java.io.IOException;
-import java.util.Collection;
 
 public interface AdsService {
 
@@ -32,7 +31,7 @@ public interface AdsService {
                        Authentication authentication) throws Exception;
     //Comments
 
-    Collection<CommentDTO> getCommentsForAd(long id);
+    CommentsDTO getCommentsForAd(long id);
 
     CommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
                              long id, Authentication authentication);
