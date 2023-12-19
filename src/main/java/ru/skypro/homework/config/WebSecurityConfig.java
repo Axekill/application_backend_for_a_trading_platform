@@ -7,21 +7,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.security.SecurityUserService;
 
 import java.util.Arrays;
@@ -33,6 +28,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class WebSecurityConfig  {
     @Autowired
     SecurityUserService securityUserService;
+    private UserDetailsService userDetailsService;
 
 
     private static final String[] AUTH_WHITELIST = {
@@ -41,7 +37,9 @@ public class WebSecurityConfig  {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/ads",
+            "/image/**"
     };
 
     @Bean
@@ -54,8 +52,6 @@ public class WebSecurityConfig  {
                                 authorization
                                         .mvcMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .mvcMatchers(HttpMethod.GET,"/ads","/ads/image/**","/users/image/**")
-                                        .permitAll()
                                         .mvcMatchers("/ads/**", "/users/**")
                                         .authenticated())
                 .cors()
@@ -67,7 +63,7 @@ public class WebSecurityConfig  {
    @Bean
     public AuthenticationManager authManager() {
         var provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(securityUserService);
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }

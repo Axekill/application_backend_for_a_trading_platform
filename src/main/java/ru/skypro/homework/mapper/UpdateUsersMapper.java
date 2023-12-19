@@ -2,15 +2,15 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.skypro.homework.dto.UpdateUserDTO;
+import ru.skypro.homework.dto.UpdateUsersDTO;
 import ru.skypro.homework.model.Users;
 
 @Mapper(componentModel = "spring")
-public interface UpdateUserMapper {
+public interface UpdateUsersMapper {
 
     @Mapping(target = "id", ignore = true)
-    Users toEntity(UpdateUserDTO dto);
+    Users toEntity(UpdateUsersDTO dto);
 
 
-    UpdateUserDTO toDTO(Users users);
+    UpdateUsersDTO toDTO(Users users);
 }

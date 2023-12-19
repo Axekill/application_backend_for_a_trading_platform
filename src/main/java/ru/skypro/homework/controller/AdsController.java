@@ -9,24 +9,56 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.ImageService;
 
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ads")
 public class AdsController {
 
     private final AdsService adsService;
+    private final ImageService imageService;
 
+
+    //создаем объявление
+    @Operation(
+            summary = "Добавление объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdDTO.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = " Unauthorized"
+                    )
+            }
+    )
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdDTO> createAd(@RequestPart("properties") CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                          @RequestPart("image") @Valid MultipartFile image,
+                                          Authentication authentication) throws IOException {
+        return ResponseEntity.ok(adsService.createAd(createOrUpdateAdDTO, image, authentication));
+    }
+
+    // update Ad
     @Operation(
             summary = "Обновление информации об объявлении",
             responses = {
@@ -36,7 +68,7 @@ public class AdsController {
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            schema = @Schema(implementation = AdsDTO.class)
+                                            schema = @Schema(implementation = AdDTO.class)
                                     )
                             }
                     ),
@@ -54,13 +86,11 @@ public class AdsController {
                     )
             }
     )
-    //создаем или обновляем объявление
-    @PostMapping
-    @PatchMapping("{id}")
-    public ResponseEntity<CreateOrUpdateAdDTO> createOrUpdateAd(@PathVariable Long id,
-                                                                @RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                                                @RequestBody AdDTO adDTO) {
-        return ResponseEntity.ok(adsService.createOrUpdateAd(createOrUpdateAdDTO, adDTO, id));
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdDTO> updateAd(@PathVariable long id,
+                                          @RequestBody CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                                          Authentication authentication) {
+        return ResponseEntity.ok(adsService.updateAd(id, createOrUpdateAdDTO, authentication));
     }
 
     @Operation(
@@ -108,12 +138,8 @@ public class AdsController {
             }
     )
     @GetMapping("{id}")
-    public ResponseEntity<AdDTO> getByIdAd(@PathVariable Long id) {
-        AdDTO adDTO = adsService.findByIdAd(id);
-        if (adDTO == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(adDTO);
+    public ResponseEntity<ExtendedAdDTO> getByIdAd(@PathVariable Long id) {
+        return ResponseEntity.ok(adsService.findByIdAd(id));
     }
 
     @Operation(
@@ -139,9 +165,9 @@ public class AdsController {
     )
     // удалить объявление
     @DeleteMapping("{id}")
-    public ResponseEntity deleteAd(@PathVariable Long id) {
-        adsService.deleteAd(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deleteAd(@PathVariable Long id, Authentication authentication) {
+        adsService.deleteAd(id, authentication);
+        return ResponseEntity.noContent().build();
     }
 
     // получить все объявления авторезированного пользователя
@@ -162,8 +188,8 @@ public class AdsController {
     )
     @GetMapping("/me")
     public ResponseEntity<AdsDTO> getAdAuthorizedUser(Authentication authentication) {
-        List<AdDTO> adDTOList = adsService.getAdInfoAuthorizedUser(authentication);
-        return ResponseEntity.ok((AdsDTO) adDTOList);
+
+        return ResponseEntity.ok(adsService.getAdInfoAuthorizedUser(authentication.getName()));
     }
 
     // обновить картинрку объявления
@@ -205,13 +231,14 @@ public class AdsController {
                     )
             }
     )
-    @PatchMapping("{id}/image")
+    @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable Long id,
                                               Authentication authentication,
                                               @RequestParam MultipartFile image) throws Exception {
         adsService.updatePhotoAd(id, image, authentication);
         return ResponseEntity.ok().build();
     }
+
 
     //Коментарии
 
@@ -239,7 +266,7 @@ public class AdsController {
             }
     )
     @GetMapping("/{id}/comments")
-    public ResponseEntity<Collection<CommentDTO>> getComments(@PathVariable Long id) {
+    public ResponseEntity<CommentsDTO> getComments(@PathVariable Long id) {
 
         return ResponseEntity.ok(adsService.getCommentsForAd(id));
     }
@@ -269,13 +296,20 @@ public class AdsController {
     )
 
     @PostMapping("/{adId}/comments")
-    @PatchMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity<CreateOrUpdateCommentDTO> addComment(@PathVariable Long adId,
-                                                               @PathVariable Long commentId,
-                                                               @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO
-    ) {
-        return ResponseEntity.ok(adsService.createOrUpdateComment(createOrUpdateCommentDTO, adId, commentId));
+    public ResponseEntity<CommentDTO> addComment(@PathVariable Long adId,
+                                                 @RequestBody @Valid CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                 Authentication authentication) {
+        return ResponseEntity.ok(adsService.createComment(createOrUpdateCommentDTO, adId, authentication));
     }
+
+    @PatchMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<CreateOrUpdateCommentDTO> updateComment(@PathVariable long adId,
+                                                                  @PathVariable long commentId,
+                                                                  @RequestBody CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                                                                  Authentication authentication) {
+        return ResponseEntity.ok(adsService.updateComment(createOrUpdateCommentDTO, adId, commentId, authentication));
+    }
+
 
     @Operation(
             summary = "Удаление комментария",
@@ -299,9 +333,10 @@ public class AdsController {
             }
     )
     @DeleteMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity deleteComment(@PathVariable Long adId,
-                                        @PathVariable Long commentId) {
-        adsService.deleteComment(adId, commentId);
+    public ResponseEntity<?> deleteComment(@PathVariable Long adId,
+                                           @PathVariable Long commentId,
+                                           Authentication authentication) {
+        adsService.deleteComment(adId, commentId, authentication);
         return ResponseEntity.ok().build();
     }
 

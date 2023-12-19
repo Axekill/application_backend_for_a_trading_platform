@@ -2,15 +2,12 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDTO;
 import ru.skypro.homework.mapper.RegisterMapper;
 import ru.skypro.homework.model.Users;
-import ru.skypro.homework.repostitory.UserRepository;
 import ru.skypro.homework.security.SecurityUserService;
 import ru.skypro.homework.service.AuthService;
 

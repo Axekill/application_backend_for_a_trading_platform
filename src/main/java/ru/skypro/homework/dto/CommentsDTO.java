@@ -11,5 +11,5 @@ public class CommentsDTO {
 
     private int count;
 
-    private List<CommentDTO> result;
+    private List<CommentDTO> results;
 }

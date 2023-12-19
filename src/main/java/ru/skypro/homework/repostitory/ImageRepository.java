@@ -3,5 +3,9 @@ package ru.skypro.homework.repostitory;
 import org.springframework.data.repository.CrudRepository;
 import ru.skypro.homework.model.Image;
 
-public interface ImageRepository extends CrudRepository<Image,Long> {
+import java.util.Optional;
+
+public interface ImageRepository extends CrudRepository<Image, Long> {
+    Optional<Image> findByUsersId(Long userId);
+    Optional<Image> findByAdId(Long AdId);
 }

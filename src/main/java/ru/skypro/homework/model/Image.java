@@ -14,15 +14,19 @@ public class Image {
     @Column(name = "id")
     private Long id;
 
-    @Lob
     @Column(name = "data")
     private byte[] data;
 
     @Column(name = "file_size")
     private Long fileSize;
 
-    @Column(name="media_size")
-    private  String mediaType;
+    @Column(name = "media_type")
+    private String mediaType;
 
+    @OneToOne
+    private Users users;
+
+    @OneToOne
+    private Ad ad;
 
 }

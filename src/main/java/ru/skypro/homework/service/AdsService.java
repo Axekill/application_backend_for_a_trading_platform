@@ -4,33 +4,41 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 
-import java.util.Collection;
-import java.util.List;
+import java.io.IOException;
 
 public interface AdsService {
 
     //ADS
 
-    CreateOrUpdateAdDTO createOrUpdateAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
-                                         AdDTO adDTO, long id);
+
+    //Ads
+    AdDTO createAd(CreateOrUpdateAdDTO createOrUpdateAdDTO,
+                   MultipartFile image,
+                   Authentication authentication) throws IOException;
+
+    AdDTO updateAd(long id, CreateOrUpdateAdDTO updateAdDTO,
+                   Authentication authentication);
+
     AdsDTO getAllAds();
 
-    AdDTO findByIdAd(long id);
+    ExtendedAdDTO findByIdAd(long id);
 
-    List<AdDTO> getAdInfoAuthorizedUser(Authentication authentication);
+    AdsDTO getAdInfoAuthorizedUser(String email);
 
-    void deleteAd(long id);
+    void deleteAd(long id, Authentication authentication);
 
-    void updatePhotoAd(Long id, MultipartFile imageFile,
-                       Authentication authentication) throws Exception;
-
+    byte[] updatePhotoAd(Long id, MultipartFile imageFile,
+                         Authentication authentication) throws Exception;
     //Comments
-    Collection<CommentDTO> getCommentsForAd(long id);
+
+    CommentsDTO getCommentsForAd(long id);
+
+    CommentDTO createComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO,
+                             long id, Authentication authentication);
+
+    CreateOrUpdateCommentDTO updateComment(CreateOrUpdateCommentDTO updateCommentDTO, long adId,
+                                           long commentId, Authentication authentication);
 
 
-    CreateOrUpdateCommentDTO createOrUpdateComment(CreateOrUpdateCommentDTO createOrUpdateCommentDTO, long adId, long commentId);
-
-    void deleteComment(long adId, long commentId);
-
-
+    void deleteComment(long adId, long commentId, Authentication authentication);
 }

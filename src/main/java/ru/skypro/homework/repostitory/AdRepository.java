@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AdRepository extends CrudRepository<Ad, Long> {
 
-    List<Ad> findAllAdByUsersId(long id);
+    List<Ad> findAllAdByUsersEmail(String email);
 
 
 

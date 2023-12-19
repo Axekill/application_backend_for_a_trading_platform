@@ -17,20 +17,15 @@ public class Users {
     @Column(name = "id",nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //логин
-//    @Column(name = "user_name")
-//    private String username;
 
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
 
-    @OneToOne
-    @JoinColumn(name = "image")
+    @OneToOne(mappedBy = "users")
     private Image image;
 
-    @Size(min = 5, max = 30)
     private String password;
 
     @Enumerated(EnumType.STRING)

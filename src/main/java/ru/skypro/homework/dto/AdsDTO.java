@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class AdsDTO {
 
-    private List<AdDTO> result;
-
     private int count;
+    private List<AdDTO> results;
+
 
 }

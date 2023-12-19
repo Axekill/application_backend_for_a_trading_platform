@@ -10,7 +10,7 @@ import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.Users;
 import ru.skypro.homework.repostitory.AdRepository;
 import ru.skypro.homework.repostitory.CommentRepository;
-import ru.skypro.homework.repostitory.UserRepository;
+import ru.skypro.homework.repostitory.UsersRepository;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SecurityCheck {
     private final AdRepository adRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final CommentRepository commentRepository;
 
 
@@ -80,7 +80,7 @@ public class SecurityCheck {
      * проверка авторизирован ли пользователь
      */
     public Users checkedUser(Authentication authentication) {
-        Optional<Users> user = userRepository.findByEmail(authentication.getName());
+        Optional<Users> user = usersRepository.findByEmail(authentication.getName());
         if (user.isEmpty()) {
             log.info("пользователь не авторизирован");
             throw new NullPointerException();

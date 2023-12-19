@@ -16,16 +16,14 @@ public class Ad {
     private int price;
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "image")
+    @OneToOne(mappedBy = "ad",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Image image;
 
     @ManyToOne
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     private Users users;
 
-    @OneToMany
-    @JoinColumn(name = "comment")
+    @OneToMany(mappedBy = "ad")
     private List<Comment> comments;
 
 
