@@ -167,7 +167,7 @@ public class AdsController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAd(@PathVariable Long id, Authentication authentication) {
         adsService.deleteAd(id, authentication);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     // получить все объявления авторезированного пользователя
@@ -189,7 +189,7 @@ public class AdsController {
     @GetMapping("/me")
     public ResponseEntity<AdsDTO> getAdAuthorizedUser(Authentication authentication) {
 
-        return ResponseEntity.ok( adsService.getAdInfoAuthorizedUser(authentication.getName()));
+        return ResponseEntity.ok(adsService.getAdInfoAuthorizedUser(authentication.getName()));
     }
 
     // обновить картинрку объявления
@@ -240,7 +240,7 @@ public class AdsController {
     }
 
 
-    @Operation(summary = "getAdsImage", description = "Запрос на получение картинки объявления",
+    @Operation(summary = "getImageAd", description = "Запрос на получение картинки объявления",
             tags = {"Объявления"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "Ok",
@@ -248,9 +248,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
                     @ApiResponse(responseCode = "404", description = "Not found")
             })
-    @GetMapping(value = "/image/{imageId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> getAdsImage(@PathVariable Long imageId) throws IOException {
-        return ResponseEntity.ok(imageService.getImage(imageId));
+    @GetMapping(value = "/image/{id}", produces = {MediaType.IMAGE_PNG_VALUE,MediaType.IMAGE_JPEG_VALUE})
+    public ResponseEntity<byte[]> getImageAd(@PathVariable long id) {
+        return ResponseEntity.ok(imageService.getImage(id));
     }
 
     //Коментарии
@@ -346,9 +346,10 @@ public class AdsController {
             }
     )
     @DeleteMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity deleteComment(@PathVariable Long adId,
-                                        @PathVariable Long commentId) {
-        adsService.deleteComment(adId, commentId);
+    public ResponseEntity<?> deleteComment(@PathVariable Long adId,
+                                           @PathVariable Long commentId,
+                                           Authentication authentication) {
+        adsService.deleteComment(adId, commentId, authentication);
         return ResponseEntity.ok().build();
     }
 

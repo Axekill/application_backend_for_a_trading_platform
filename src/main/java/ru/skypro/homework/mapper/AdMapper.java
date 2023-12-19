@@ -16,8 +16,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {UsersMapper.class})
 public interface AdMapper {
 
-    //    @Mapping(source = "id", target = "author")
-//    AdDTO toDTO(Users users);
     @Mapping(source = "image", target = "image", qualifiedByName = "getAdImageLink")
     @Mapping(target = "author", source = "users.id")
     @Mapping(source = "id", target = "pk")
@@ -35,13 +33,11 @@ public interface AdMapper {
     @Mapping(source = "id", target = "pk")
     ExtendedAdDTO AdToExtendedDTO(Ad ad);
 
-    Ad toEntity(CreateOrUpdateAdDTO dto);
+    Ad CreateOrUpdateAdDTOToAd(CreateOrUpdateAdDTO dto);
 
-    //    @Mapping(source = "author", target = "id")
-//    Users toEntity(AdDTO dto);
     @Mapping(source = "author", target = "users.id")
     @Mapping(target = "id", source = "pk")
-   @Mapping(target = "image", ignore = true)
+    @Mapping(target = "image", ignore = true)
     Ad adToEntity(AdDTO dto);
 
     @Named("getAdImageLink")

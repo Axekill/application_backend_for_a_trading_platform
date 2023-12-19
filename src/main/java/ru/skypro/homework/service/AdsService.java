@@ -27,8 +27,8 @@ public interface AdsService {
 
     void deleteAd(long id, Authentication authentication);
 
-    void updatePhotoAd(Long id, MultipartFile imageFile,
-                       Authentication authentication) throws Exception;
+    byte[] updatePhotoAd(Long id, MultipartFile imageFile,
+                         Authentication authentication) throws Exception;
     //Comments
 
     CommentsDTO getCommentsForAd(long id);
@@ -39,6 +39,6 @@ public interface AdsService {
     CreateOrUpdateCommentDTO updateComment(CreateOrUpdateCommentDTO updateCommentDTO, long adId,
                                            long commentId, Authentication authentication);
 
-    void deleteComment(long adId, long commentId);
 
+    void deleteComment(long adId, long commentId, Authentication authentication);
 }

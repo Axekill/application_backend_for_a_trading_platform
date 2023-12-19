@@ -1,7 +1,6 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -9,9 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.NewPasswordDTO;
-import ru.skypro.homework.dto.UpdateUsersDTO;
-import ru.skypro.homework.dto.UsersDTO;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.mapper.UpdateUsersMapper;
 import ru.skypro.homework.mapper.UsersMapper;
 import ru.skypro.homework.model.Image;
@@ -24,6 +21,7 @@ import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -40,6 +38,11 @@ public class UsersServiceImpl implements UsersService {
     private ImageService imageService;
     private ImageRepository imageRepository;
 
+    @Override
+    public UsersListDTO getAllUsers() {
+        List<Users> usersList = (List<Users>) repository.findAll();
+        return usersMapper.toUsersListDTO(usersList.size(), usersList);
+    }
 
     @Override
     public UpdateUsersDTO updateUser(UpdateUsersDTO updateUsersDTO, Authentication authentication) {
@@ -77,9 +80,7 @@ public class UsersServiceImpl implements UsersService {
     public void setPhoto(MultipartFile image, Authentication authentication) throws IOException {
         Users users = securityCheck.checkedUser(authentication);
         users.setImage(imageService.uploadImage(image));
-
         Image avatar = imageRepository.findByUsersId(users.getId()).orElse(new Image());
-
         try {
             avatar.setData(image.getBytes());
         } catch (IOException e) {
@@ -88,6 +89,17 @@ public class UsersServiceImpl implements UsersService {
         }
         avatar.setUsers(users);
         imageRepository.save(avatar);
+    }
+
+    @Override
+    public void checkPermission(Authentication authentication, String email) {
+        boolean user = authentication.getName().equals(email);
+        boolean userIsAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().contains(Role.ADMIN.name()));
+        if (!(userIsAdmin || user)) {
+            log.warn("текущий пользователь не имеет прав на выполнение данной операции");
+            throw new RuntimeException("текущий пользователь не имеет прав на выполнение данной операции");
+        }
     }
 
 }

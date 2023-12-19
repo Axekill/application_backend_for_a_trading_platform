@@ -24,4 +24,6 @@ public interface ImageService {
     byte[] getImage(Long id);
 
     Image createImage(MultipartFile imageFile, Ad ad) throws IOException;
+
+    void extractInfoFromFile(MultipartFile file, Image imageToSave);
 }

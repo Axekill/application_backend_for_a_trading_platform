@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.model.Ad;
@@ -11,6 +12,7 @@ import ru.skypro.homework.service.ImageService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 
+@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class ImageServiceImpl implements ImageService {
         image.setData(multipartFile.getBytes());
         image.setFileSize(multipartFile.getSize());
         image.setMediaType(multipartFile.getContentType());
+        log.info("Изображение было сохранено");
         return imageRepository.save(image);
     }
 
@@ -34,13 +37,28 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image createImage(MultipartFile imageFile, Ad ad) throws IOException {
+    public Image createImage(MultipartFile imageFile, Ad ad) {
         Image imageAd = new Image();
-        imageAd.setData(imageFile.getBytes());
-        imageAd.setFileSize(imageFile.getSize());
-        imageAd.setMediaType(imageFile.getContentType());
+        extractInfoFromFile(imageFile, imageAd);
         imageAd.setAd(ad);
         return imageRepository.save(imageAd);
     }
 
+    @Override
+    public void extractInfoFromFile(MultipartFile file, Image imageToSave) {
+        if (file.isEmpty()) {
+            log.warn("File '{}' is empty!", file.getOriginalFilename());
+            throw new RuntimeException();
+        }
+        byte[] imageData;
+        try {
+            imageData = file.getBytes();
+        } catch (IOException e) {
+            log.error("File '{}' has some problems and cannot be read.", file.getOriginalFilename());
+            throw new RuntimeException("Problems with uploaded image");
+        }
+        imageToSave.setData(imageData);
+        imageToSave.setFileSize(file.getSize());
+        imageToSave.setMediaType(file.getContentType());
+    }
 }

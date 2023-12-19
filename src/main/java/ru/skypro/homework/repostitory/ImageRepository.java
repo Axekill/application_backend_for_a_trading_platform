@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ImageRepository extends CrudRepository<Image, Long> {
     Optional<Image> findByUsersId(Long userId);
+    Optional<Image> findByAdId(Long AdId);
 }
