@@ -42,7 +42,7 @@ public interface AdMapper {
 
     @Named("getAdImageLink")
     default String getAdImageLink(Image image) {
-        return (image == null) ? null : "/ads/image/" + image.getId();
+        return (image == null) ? null : "/image/" + image.getId();
     }
 }
 
