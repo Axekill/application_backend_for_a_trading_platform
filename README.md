@@ -43,4 +43,3 @@
 - Запустить **main** приложение **[HomeworkApplication.java](src/main/java/ru/skypro/homework/HomeworkApplication.java)**
 
 Далее переходим в боаузер по ссылке http://localhost:3000
-
